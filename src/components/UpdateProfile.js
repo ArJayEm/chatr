@@ -5,6 +5,7 @@ import { useAuth } from "../context/AuthContext";
 import NavigationBar from "./NavigationBar";
 import defaultUser from "../images/default_user.jpg";
 import QRCode from "react-qr-code";
+import { auth } from "../firebase";
 
 export default function UpdateProfile() {
   const displayNameRef = useRef();
@@ -29,7 +30,7 @@ export default function UpdateProfile() {
         ? "You registered using " + providerId + ". Can't be updated."
         : "";
       setMessage(msg);
-      console.log(msg);
+      //console.log(msg);
       //setLoading("");
     },
     //eslint-disable-next-line
@@ -51,18 +52,14 @@ export default function UpdateProfile() {
       return setError("Display name is required.");
     }
 
-    var yawa = 0;
     if (displayNameRef.current.value !== currentUser.displayName) {
       promises.push(updateName(displayNameRef.current.value));
-      yawa = 1;
     }
     if (emailRef.current.value !== currentUser.email) {
       promises.push(updateEmail(emailRef.current.value));
-      yawa = 2;
     }
     if (passwordRef.current.value) {
       promises.push(updatePassword(passwordRef.current.value));
-      yawa = 3;
     }
 
     Promise.all(promises)
@@ -72,8 +69,8 @@ export default function UpdateProfile() {
       })
       .catch(() => {
         setLoading(false);
-        console.log("yawa: " + yawa);
-        console.log(promises);
+        //console.log("yawa: " + yawa);
+        //console.log(promises);
         setError("Failed to update");
       })
       .finally(() => {
@@ -105,7 +102,12 @@ export default function UpdateProfile() {
                   style={{ width: "6em" }}
                 />
                 <div style={{ background: "white", padding: "16px" }}>
-                  <QRCode value={currentUser.uid} fgColor="#198754" size="144" title={displayName} />
+                  <QRCode
+                    value={auth.currentUser.providerData[0].uid}
+                    fgColor="#198754"
+                    size="144"
+                    title={displayName}
+                  />
                 </div>
               </div>
               <Form onSubmit={handleSubmit}>

@@ -1,9 +1,53 @@
 @import 'variables.less';
 
 #root {
-    display: grid;
+    display: list-item;
     height: 100vh;
     //overflow: hidden;
+}
+
+#Login {
+    .login-provider {
+        width: 100% !important;
+        margin-top: .25rem;
+        border: 1px solid #ced4da;
+        background-color: #fff;
+        color: #000;
+        //text-align: right;
+
+        &:hover, &:focus {
+            background-color: #ced4da;
+        }
+
+        svg {
+            float: left;
+            font-size: 1.5em;
+
+            &.github {
+                color: #6c757d;
+            }
+
+            &.google {
+                color: #fd7e14;
+            }
+
+            &.facebook {
+                color: #0d6efd;
+            }
+        }
+    }
+}
+
+#MobileMenu {
+    display: none;
+    height: 100vh;
+    width: 100%;
+    background-color: #fff;
+    color: #000;
+
+    a {
+        color: #000;
+    }
 }
 
 nav.navbar {
@@ -12,6 +56,7 @@ nav.navbar {
     //top: 0;
     left: 0;
     z-index: 2;
+    max-height: 54px;
 }
 
 ul.nav {
@@ -139,17 +184,31 @@ ul#Users {
     //top: 54px;
     left: 0;
     padding: 0.5em 1em;
-    background-color: #fff;z-index: 1;
-}
+    background-color: #fff; 
+    z-index: 1;
+    column-gap: 0.5em;
+    //justify-content: start;
+    display: flex;
+    width: 100%!important;
 
-&.contact_small img {
-    width: 1.5em !important;
-}
-&.contact_medium img {
-    width: 3em !important;
-}
-&.contact_large img {
-    width: 6em !important;
+    a {font-size: 1.4em;}
+
+    img, svg {
+        vertical-align: middle;
+    }
+
+    &.contact_tiny img {
+        width: 1.5em !important;
+    }
+    &.contact_small img {
+        width: 2em !important;
+    }
+    &.contact_medium img {
+        width: 3em !important;
+    }
+    &.contact_large img {
+        width: 6em !important;
+    }
 }
 
 .page {
@@ -230,31 +289,47 @@ ul#Users {
                     border-top-right-radius: 0.3em !important;
                 }
             }
-        }
 
-        td {        
-            small {
-                color: #ccc;
-                margin-top: 0.3em;
-            }
+            &.status {
+                td {
+                    text-align: right;
     
-            p {        
-                max-width: 90%;
-                text-align: left;
-                background-color: #eee;
-                padding: 0.3em 1em;
-                border-radius: 1em;
-                margin-bottom: 0em;
-                width: fit-content;
-                color: #545b61;
-    
-                &.sent {
-                    float: right;
-                    color: #fff;
-                    background-color: @bs-success;
+                    svg {
+                        //float: right;
+                        color: #6c757d;
+        
+                        &.isSeen {
+                            color: @bs-success !important;
+                        }
+                    }
                 }
             }
-        }}
+
+            td {        
+                small {
+                    color: #ccc;
+                    margin-top: 0.3em;
+                }
+        
+                p {        
+                    max-width: 90%;
+                    text-align: left;
+                    background-color: #eee;
+                    padding: 0.3em 1em;
+                    border-radius: 1em;
+                    margin-bottom: 0em;
+                    width: fit-content;
+                    color: #545b61;
+        
+                    &.sent {
+                        float: right;
+                        color: #fff;
+                        background-color: @bs-success;
+                    }
+                }
+            }
+        }
+    }
 }
 
 #NewMessages {
@@ -272,27 +347,40 @@ ul#Users {
         box-shadow: 1px 2px 5px #a0adb9;
         width: -moz-fit-content;
         /* width: fit-content; */
-        padding: 0.3em 0.4em;
+        padding: 0.3em 0.4em 0.3em 0.6em;
     }
 }
 
 #Reply {
+    max-height: 54px;
     width: 100vw;
     //position: fixed;
     // margin-bottom: 0.5em;
     // margin-top: 0.5rem;
-    display: grid;
+    display: flex;
     padding: 0.5em 1em;
     position: absolute;
     bottom: 0;background-color: #fff;
+    column-gap: 0.5em;
 
     //bottom: 0; 
+    a {
+        font-size: 1.4em;
+    }
 
     .subForm {
         background-color: #fff;   
         display: inline-flex;
         column-gap: 0.5em;
+        width: inherit;
     }
+    //input {
+        //width: 50%;
+
+        // &:focus, &:active, &[value]:not([value=""]) {
+        //     width: 100% !important;
+        // }
+    //}
 }
 
 .form-group {

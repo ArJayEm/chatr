@@ -24,7 +24,7 @@ export function AuthProvider({ children }) {
   }
 
   function resetPassword(email) {
-    console.log(email);
+    ////console.log(email);
     return auth.sendPasswordResetEmail(email);
   }
 
@@ -50,7 +50,7 @@ export function AuthProvider({ children }) {
       .onError(() => {
         //return false;
       });
-    console.log("updated: " + updated);
+    ////console.log("updated: " + updated);
     return updated;
   }
 

@@ -1,6 +1,6 @@
 import { useEffect, useRef, useState } from "react";
 import { Alert, Button, Form, Image } from "react-bootstrap";
-import { useParams } from "react-router-dom";
+import { useParams, Link } from "react-router-dom";
 import { auth, firestore } from "../firebase";
 import NavigationBar from "./NavigationBar";
 
@@ -8,9 +8,9 @@ import NavigationBar from "./NavigationBar";
 import { useCollectionData } from "react-firebase-hooks/firestore";
 //import { format } from "date-fns";
 
-import DownIcon from "mdi-react/ArrowDownIcon";
 import defaultUser from "../images/default_user.jpg";
 import MessageBubble from "./MessageBubble";
+import * as Icon from "react-bootstrap-icons";
 
 export default function Conversation() {
   const [error, setError] = useState("");
@@ -21,36 +21,57 @@ export default function Conversation() {
   //const [messages, setMessages] = useState(null);
   let { uid: contactId } = useParams();
   const [contact, setContact] = useState();
-  //const [conversations, setConversations] = useState();
+  const [unseenMessage, setUnseenMessage] = useState("");
   const messageRef = useRef();
-  const scrollRef = useRef();
-  const [showNewMessageButton, setShowNewMessageButton] = useState(false);
+  const scrollRef = useRef(null);
+  const [hasUnseen, setHasUnseen] = useState(false);
   const [withScroll, setWithScroll] = useState(false);
-
+  const [reachedTop, setReachedTop] = useState(false);
   let from = auth.currentUser.uid + " - " + contactId;
   let to = contactId + " - " + auth.currentUser.uid;
   let senders = [from, to];
+
   let messagesCollection = firestore
     .collection("messages")
-    .where("senders", "in", senders); //.limit(10);
-  let conversationFilter = messagesCollection;
-  let [conversations] = useCollectionData(conversationFilter);
+    .where("senders", "in", senders);
+
   let unseenFilter = messagesCollection
     .where("status", "==", 0)
     .where("to", "==", auth.currentUser.uid);
   let unseenCount = 0;
   unseenFilter.get().then((snapshots) => {
+    // console.log(snapshots.exists)
+    // if (snapshots.exists) {
     unseenCount = snapshots.docs.length;
-    //console.log(unseenCount);
+    if (unseenCount > 0) {
+      //console.log(snapshots.docs.sort((a, b) => b.data().createdDate.seconds - a.data().createdDate.seconds).map((e, i) => i === 0 ? e.data().message : null).filter((e) => e) ?? "")
+      //setConversationsHeight();
+      setHasUnseen(true);
+      let latestUnseenMessage =
+        snapshots.docs
+          .sort(
+            (a, b) =>
+              b.data().createdDate.seconds - a.data().createdDate.seconds
+          )
+          .map((e, i) => (i === 0 ? e.data().message : null))
+          .filter((e) => e) ?? "";
+      //scrollToBottom();
+      setUnseenMessage(latestUnseenMessage);
+    }
+    //}
     setConversationsHeight();
-    setShowNewMessageButton(unseenCount > 0);
   });
+
+  let conversationFilter = messagesCollection; //hasUnseen ? messagesCollection : messagesCollection.limit(10);
+  let [conversations] = useCollectionData(conversationFilter);
+  //lastIndex = conversations.reverse().map((e) => e.uid);
+  //console.log(conversations.map((e) => {return e.uid}));
+
   let usersCollection = firestore.collection("users");
 
   useEffect(
     () => {
       getContact();
-      setConversationsHeight();
     },
     //eslint-disable-next-line
     []
@@ -78,11 +99,12 @@ export default function Conversation() {
 
     if (tableHeight <= conversationsHeight) {
       setWithScroll(false);
-      seenNewMessages();
+      //seenNewMessages();
     } else {
       setWithScroll(true);
       //scrollToBottom();
     }
+    //console.log(withScroll, hasUnseen)
   }
 
   async function getContact() {
@@ -154,6 +176,7 @@ export default function Conversation() {
       if (currentScrollPosition === divScrollHeight) {
         seenNewMessages();
       }
+      setReachedTop(scrollTop === 0);
     }
   };
 
@@ -176,7 +199,7 @@ export default function Conversation() {
     unseenFilter.get().then((snapshots) => {
       unseenCount = snapshots.docs.length;
       //console.log(unseenCount);
-      setShowNewMessageButton(unseenCount > 0);
+      setHasUnseen(unseenCount > 0);
     });
     // } else {
     //   //console.log("none to be seen");
@@ -206,14 +229,17 @@ export default function Conversation() {
   return (
     <div className="page">
       <NavigationBar />
-      <div className="contact contact_medium w-100" style={{ display: "flex" }}>
+      <div className="contact contact_small">
+        <Link className="link" to="/">
+          <Icon.ArrowLeftShort style={{ color: "#198754" }} />
+        </Link>
         <div className="user-icon">
           <Image
             roundedCircle
             onError={() => handleOnError}
             src={(contact && contact.providerData.photoURL) || defaultUser}
             alt=""
-            style={{ width: "3em" }}
+            style={{ width: "2em" }}
           />
           <span
             className={
@@ -223,8 +249,9 @@ export default function Conversation() {
             ●
           </span>
         </div>
-        &nbsp;&nbsp;
-        <div style={{ display: "grid" }}>
+        <div
+          style={{ display: "grid", height: "fit-content", fontSize: "0.8em" }}
+        >
           {contact && (contact.displayName || contact.providerData.displayName)}
           {contact && contact.isLoggedIn ? (
             <strong style={{ color: "#198754" }}>Online</strong>
@@ -243,6 +270,11 @@ export default function Conversation() {
         {message && <Alert variant="success">{message}</Alert>}
         <table>
           <tbody>
+            {reachedTop && (
+              <tr>
+                <td>Retrieving messages...</td>
+              </tr>
+            )}
             {conversations &&
               conversations
                 .sort((a, b) => a.createdDate - b.createdDate)
@@ -292,17 +324,21 @@ export default function Conversation() {
       </div>
       <div
         id="NewMessages"
-        style={{ display: showNewMessageButton && withScroll ? "" : "none" }}
+        style={{ display: hasUnseen && withScroll ? "" : "none" }}
       >
         <button type="button" onClick={scrollToBottom}>
           {/* <small>
           New Message
           {unseenCount > 1 ? "s " : " "}
         </small> */}
-          <DownIcon />
+          {hasUnseen && <small>{unseenMessage} </small>}
+          <Icon.ArrowDown />
         </button>
       </div>
       <Form id="Reply" onSubmit={handleOnSend}>
+        <Link className="link" to="">
+          <Icon.PlusCircleFill style={{ color: "#198754" }} />
+        </Link>
         <div className="subForm">
           <Form.Control
             type="text"
@@ -311,7 +347,7 @@ export default function Conversation() {
             required
           />
           <Button variant="success" disabled={sending} type="submit">
-            Send
+            <Icon.Send />
           </Button>
         </div>
       </Form>

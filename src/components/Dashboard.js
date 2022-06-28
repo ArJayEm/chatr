@@ -15,11 +15,15 @@ export default function Dashboard() {
   const displayName =
     currentUser && (currentUser.displayName ?? currentUser.email);
   const history = useNavigate();
+  const [user, setUser] = useState(null);
+
+  let usersCollection = firestore.collection("users");
 
   useEffect(
     () => {
       if (auth.currentUser != null) {
         saveUser();
+        setDashboardHeight();
       } else {
         history("/login");
       }
@@ -49,45 +53,67 @@ export default function Dashboard() {
   }
 
   async function saveUser() {
-    try {
-      setMessage("");
-      setError("");
-      setLoading(true);
+    load();
 
-      var doc = firestore.collection("users").doc(auth.currentUser.uid);
+    var doc = usersCollection.doc(auth.currentUser.uid);
 
-      if ((await doc.get()).exists) {
-        await doc.update({
+    if ((await doc.get()).exists) {
+      await doc
+        .update({
           editedDate: auth.currentUser.metadata.lastSignInTime,
           displayName: auth.currentUser.displayName ?? auth.currentUser.email,
           lastLogIn: auth.currentUser.metadata.lastSignInTime,
           providerData: auth.currentUser.providerData.map((e) => e)[0],
           isLoggedIn: true,
           //userCode: generateUserCode(),
+        })
+        .catch((e) => {
+          catchError(e, "update-user-error.");
         });
-      } else {
-        await doc.set({
+    } else {
+      await doc
+        .set({
           displayName: auth.currentUser.displayName ?? auth.currentUser.email,
           uid: auth.currentUser.uid,
           createdDate: auth.currentUser.metadata.createdDate ?? Date.now(),
           lastLogIn: auth.currentUser.metadata.lastSignInTime ?? Date.now(),
           providerData: auth.currentUser.providerData.map((e) => e)[0],
           //userCode: generateUserCode(),
-          contacts: [],
+          userContacts: [],
           isLoggedIn: true,
+        })
+        .catch((e) => {
+          catchError(e, "set-user-error.");
         });
-      }
-      setLoading(false);
-    } catch (e) {
-      setLoading(false);
-      console.error(e.message);
-      return setError("Login error.");
     }
+    setLoading(false);
+  }
+
+  function setDashboardHeight() {
+    let navbarHeight =
+      document.getElementsByClassName("navbar")[0].offsetHeight;
+    const heightToDeduct = window.innerHeight - navbarHeight;
+    let rootDiv = document.getElementById("ContactsDiv");
+    //console.log(heightToDeduct);
+    //rootDiv.style.height = heightToDeduct + "px";
+  }
+
+  function load() {
+    setMessage("");
+    setError("");
+    setLoading(true);
+  }
+
+  function catchError(e, msg) {
+    setLoading(false);
+    console.error(e.message);
+    return setError(msg);
   }
 
   return (
     <>
       <NavigationBar />
+      {/* {loading ? <></> : <Contacts />} */}
       <Contacts />
     </>
   );

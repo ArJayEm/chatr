@@ -1,20 +1,33 @@
-import React, { useState, useEffect } from "react";
-import { Link, useNavigate } from "react-router-dom";
-import { Card, Container, Alert, Button, Image } from "react-bootstrap";
-import { auth, firestore } from "../firebase";
+/* eslint-disable no-unused-vars */
 import AddIcon from "mdi-react/AddIcon";
+import { useEffect, useState } from "react";
+import { Alert, Button, Card, Container, Image } from "react-bootstrap";
+import { Link, useNavigate } from "react-router-dom";
+import { auth, firestore } from "../firebase";
 import defaultUser from "../images/default_user.jpg";
 
 export default function Contacts() {
   const [error, setError] = useState("");
   const [message, setMessage] = useState("");
   const [loading, setLoading] = useState(false);
-  // eslint-disable-next-line
   const [user, setUser] = useState(null);
   const [contacts, setContacts] = useState(null);
   const history = useNavigate();
 
   let usersCollection = firestore.collection("users");
+  let userContacts = [];
+  // usersCollection
+  //   .doc(auth.currentUser.uid)
+  //   .get()
+  //   .then((snapshot) => {
+  //     setUser(snapshot.data());
+  //     userContacts = snapshot.data().contacts.map((e) => e.uid) ?? [];
+  //   });
+  // let contactsCollection =
+  //   userContacts.length > 0
+  //     ? usersCollection.where("uid", "in", userContacts)
+  //     : usersCollection;
+  // let [contacts] = useCollectionData(contactsCollection);
 
   useEffect(
     () => {
@@ -63,7 +76,6 @@ export default function Contacts() {
       .get()
       .then((snapshots) => {
         setContacts(snapshots.docs.map((e) => e.data()));
-        console.log(contacts);
         setLoading(false);
       })
       .finally(() => {})
@@ -93,8 +105,8 @@ export default function Contacts() {
   return (
     <>
       <Container
+        id="ContactsDiv"
         className="d-flex justify-content-center mt-4"
-        style={{ minHeight: "100vh" }}
       >
         <div className="w-100" style={{ maxWidth: "400px" }}>
           <Card>

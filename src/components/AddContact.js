@@ -2,11 +2,11 @@ import React, { useRef, useState } from "react";
 import { Container, Card, Alert, Button, Image } from "react-bootstrap";
 import { Link } from "react-router-dom";
 import NavigationBar from "./NavigationBar";
-import SearchIcon from "mdi-react/SearchIcon";
-import BarcodeScannerIcon from "mdi-react/QrcodeIcon";
+import * as Icon from 'react-bootstrap-icons';
 import { auth, firestore } from "../firebase";
 import defaultUser from "../images/default_user.jpg";
 import { useAuth } from "../context/AuthContext";
+import { QrReader } from "react-qr-reader";
 
 export default function AddContact() {
   const [error, setError] = useState("");
@@ -16,6 +16,7 @@ export default function AddContact() {
   const [contacts, setContacts] = useState(null);
   const { currentUser } = useAuth();
   const [user, setUser] = useState();
+  const [data, setData] = useState(null);
 
   var usersRef = firestore.collection("users");
   //var requestsRef = firestore.collection("requests");
@@ -70,6 +71,8 @@ export default function AddContact() {
     }
   }
 
+  function handleOnScan() {}
+
   async function handleSendRequest(uid) {
     try {
       setMessage("");
@@ -111,6 +114,23 @@ export default function AddContact() {
             <Card.Body>
               {error && <Alert variant="danger">{error}</Alert>}
               {message && <Alert variant="success">{message}</Alert>}
+              {(
+                <>
+                  <QrReader
+                    onResult={(result, error) => {
+                      if (!!result) {
+                        setData(result?.text);
+                      }
+
+                      if (!!error) {
+                        console.info(error);
+                      }
+                    }}
+                    style={{ width: "100%" }}
+                  />
+                  <p>{data}</p>
+                </>
+              )}
               <div className="form-group">
                 <input
                   type="text"
@@ -125,10 +145,15 @@ export default function AddContact() {
                   onError={() => handleOnError}
                   onClick={handleOnSearch}
                 >
-                  <SearchIcon />
+                  <Icon.Search />
                 </button>
-                <button type="button" title="Scan">
-                  <BarcodeScannerIcon />
+                <button
+                  type="button"
+                  title="Scan"
+                  onError={() => handleOnError}
+                  onClick={handleOnScan}
+                >
+                  <Icon.QrCodeScan />
                 </button>
               </div>
               {/* <h2 className="text-center mb-4">Add Contact</h2> */}

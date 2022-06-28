@@ -1,23 +1,33 @@
-import React from "react";
-import { Navbar, Container, Image, Dropdown } from "react-bootstrap";
+import { Container, Dropdown, Image, Navbar } from "react-bootstrap";
 import { Link, useNavigate } from "react-router-dom";
 //import { useAuthState } from "react-firebase-hooks/auth";
 import { useAuth } from "../context/AuthContext";
 import myIconInverted from "../images/chatr_icon_inverted.png";
 //import myIcon from "../images/chatr_icon.png";
-import defaultUser from "../images/default_user.jpg";
+import { useState } from "react";
+import * as Icon from "react-bootstrap-icons";
+import {
+  BrowserView,
+  isBrowser,
+  isMobile,
+  MobileView,
+} from "react-device-detect";
 import { auth, firestore } from "../firebase";
+import defaultUser from "../images/default_user.jpg";
+import { slide as Menu } from "react-burger-menu";
 
 export default function NavigationBar() {
   //const handleClose = () => setShow(false);
   //const handleShow = () => setShow(true);
   const { currentUser } = useAuth();
+  //no-unused-vars
   const { logout } = useAuth();
   const history = useNavigate();
   //const [error, setError] = useState("");
   //const [loading, setLoading] = useState(false);
   const displayName =
     currentUser && (currentUser.displayName ?? currentUser.email);
+  const [showMobileMenu, setShowMobileMenu] = useState(false);
 
   async function handleLogout() {
     try {
@@ -39,6 +49,14 @@ export default function NavigationBar() {
     }
   }
 
+  function handleOnOpen() {
+    setShowMobileMenu(true);
+  }
+
+  function handleOnClose() {
+    setShowMobileMenu(false);
+  }
+
   function handleOnError() {}
 
   return (
@@ -46,7 +64,7 @@ export default function NavigationBar() {
       <Container>
         <ul className="nav">
           <li>
-            <Navbar.Brand href="/">
+            <Link className="link active" to="/" title="Chatr">
               <img
                 alt=""
                 src={myIconInverted}
@@ -54,22 +72,6 @@ export default function NavigationBar() {
                 height="30"
                 className="d-inline-block align-top"
               />
-              Chatr
-            </Navbar.Brand>
-          </li>
-          <li>
-            <Link className="link active" to="/">
-              Home
-            </Link>
-          </li>
-          <li>
-            <Link className="link" to="/notifications">
-              Notifications
-            </Link>
-          </li>
-          <li>
-            <Link className="link" to="/update-profile">
-              Profile
             </Link>
           </li>
         </ul>
@@ -86,22 +88,49 @@ export default function NavigationBar() {
               src={(currentUser && currentUser.photoURL) || defaultUser}
               alt="photoURL"
               style={{ width: "1.5em" }}
-            />
-            &nbsp;&nbsp;
-            <div
-              style={{
-                maxWidth: "8em",
-                overflow: "hidden",
-                textOverflow: "ellipsis",
-              }}
-            >
-              {displayName}&nbsp;
-            </div>
+            />{" "}
+            &nbsp;
           </Dropdown.Toggle>
           <Dropdown.Menu>
-            <Dropdown.Item onClick={handleLogout}>Log Out</Dropdown.Item>
+            <Dropdown.Header>
+              <Icon.PersonFill /> {displayName}
+            </Dropdown.Header>
+            <Link className="link dropdown-item" to="/update-profile">
+              <Icon.PersonFill /> Profile
+            </Link>
+            <Link className="link dropdown-item" to="/notifications">
+              <Icon.BellFill /> Notifications
+            </Link>
+            <Dropdown.Divider></Dropdown.Divider>
+            <Dropdown.Item onClick={handleLogout}>
+              <Icon.BoxArrowRight /> Log Out
+            </Dropdown.Item>
           </Dropdown.Menu>
         </Dropdown>
+        {isBrowser && <BrowserView></BrowserView>}
+        {/* {isMobile && (
+          <MobileView>
+            <Menu
+              isOpen={showMobileMenu}
+              onOpen={handleOnOpen}
+              onClose={handleOnClose}
+              disableCloseOnEsc
+              noOverlay //customCrossIcon={ <img src="img/cross.svg" /> }
+            >
+              <Dropdown.Header>
+                <Icon.PersonFill /> {displayName}
+              </Dropdown.Header>
+              <Link className="link dropdown-item" to="/update-profile">
+                <Icon.PersonFill /> Profile
+              </Link>
+              <Link className="link dropdown-item" to="/notifications">
+                <Icon.BellFill /> Notifications
+              </Link>
+              <Link className="link dropdown-item" onClick={handleLogout}>
+                <Icon.BoxArrowRight /> Log Out
+              </Link>
+            </Menu>
+          </MobileView> */}
       </Container>
     </Navbar>
   );

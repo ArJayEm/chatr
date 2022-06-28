@@ -9,9 +9,7 @@ import {
   facebookProvider,
   githubProvider,
 } from "../firebase";
-import FacebookIcon from "mdi-react/FacebookIcon";
-import GoogleIcon from "mdi-react/GoogleIcon";
-import GithubIcon from "mdi-react/GithubIcon";
+import * as Icon from "react-bootstrap-icons";
 
 export default function Continue() {
   const emailRef = useRef();
@@ -24,22 +22,19 @@ export default function Continue() {
 
   async function handleSubmit(e) {
     e.preventDefault();
+    load();
 
     try {
       await login(emailRef.current.value, passwordRef.current.value);
       //saveUser();
       history("/");
     } catch (e) {
-      setLoading(false);
-      console.error(e.message);
-      return setError("Login failed. (" + e.code.replace("auth/", "") + ")");
+      catchError(e, "Login failed. (" + e.code.replace("auth/", "") + ")");
     }
   }
 
   async function handleOnClick(provider) {
-    setMessage("");
-    setError("");
-    setLoading(true);
+    load();
 
     if (provider == null) {
       setLoading(false);
@@ -51,14 +46,25 @@ export default function Continue() {
       //saveUser();
       history("/");
     } catch (e) {
-      setLoading(false);
-      console.error(e.message);
-      return setError("Login failed. (" + e.code.replace("auth/", "") + ")");
+      catchError(e, "Login failed. (" + e.code.replace("auth/", "") + ")");
     }
+  }
+
+  function load() {
+    setMessage("");
+    setError("");
+    setLoading(true);
+  }
+
+  function catchError(e, msg) {
+    setLoading(false);
+    console.error(e.message);
+    return setError(msg);
   }
 
   return (
     <Container
+      id="Login"
       className="d-flex align-items-center justify-content-center"
       style={{ minHeight: "100vh" }}
     >
@@ -83,8 +89,8 @@ export default function Continue() {
                 />
               </Form.Group>
               <Button
-                variant="success"
                 disabled={loading}
+                variant="success"
                 className="w-100 mt-4"
                 type="submit"
               >
@@ -96,37 +102,26 @@ export default function Continue() {
             </div>
           </Card.Body>
         </Card>
-        <hr />
         {/* <div class="fb-login-button" data-width="" data-size="medium" data-button-type="continue_with" data-layout="default" data-auto-logout-link="false" data-use-continue-as="true"></div> */}
+
         <Button
-          variant="primary"
-          className="w-100 mt-1"
-          onClick={() => handleOnClick(facebookProvider)}
-        >
-          <FacebookIcon style={{ float: "left" }} />
-          <span> Continue with Facebook</span>
-        </Button>
-        <Button
-          variant="light"
-          className="w-100 mt-1"
-          style={{
-            backgroundColor: "#fd7e14",
-            color: "#fff",
-          }}
+          className="login-provider mt-4"
           onClick={() => handleOnClick(googleProvider)}
         >
-          <GoogleIcon style={{ float: "left" }} />
-          <span> Continue with Google</span>
+          <Icon.Google className="google" /> Continue with Google
         </Button>
         <Button
-          variant="secondary"
-          className="w-100 mt-1"
+          className="login-provider"
+          onClick={() => handleOnClick(facebookProvider)}
+        >
+          <Icon.Facebook className="facebook" /> Continue with Facebook
+        </Button>
+        <Button
+          className="login-provider"
           onClick={() => handleOnClick(githubProvider)}
         >
-          <GithubIcon className="" style={{ float: "left" }} />
-          <span> Continue with GitHub</span>
+          <Icon.Github className="github" /> Continue with GitHub
         </Button>
-        <hr />
         <div className="w-100 text-center mt-2">
           Need an account? <Link to="/signup">Sign Up</Link>
         </div>

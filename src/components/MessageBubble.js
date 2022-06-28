@@ -1,5 +1,6 @@
 import { format } from "date-fns";
 import { auth } from "../firebase";
+//import * as Icon from "react-bootstrap-icons";
 
 export default function MessageBubble({
   index,
@@ -8,13 +9,16 @@ export default function MessageBubble({
   previousMessage,
   nextMessage,
 }) {
-  const isSent = message.from === auth.currentUser.uid;
+  const isFromUser = message.from === auth.currentUser.uid;
+  const isFromUserClass = isFromUser ? "sent" : "recieved";
   let isPreviousSameSender = false;
   let isNextSameSender = false;
   let bubbleCounter = 0;
   let sameTime = false;
   let sameTimeNext = false;
   let bubbleClass = "";
+  const isStatusSent = message.status === 0;
+  //const isStatusSentClass = isStatusSent ? "isSent" : "isRecieved";
   //let newKey = message.id + index;
 
   //function convertTime() {}
@@ -46,7 +50,11 @@ export default function MessageBubble({
     let isSameMinute = format(now, "m") === format(date, "m");
     let isWithinAWeek =
       isSameYear && isSameMonth && date.getDay() - now.getDay() < 8;
-    //let isOneDayAgo = now.getDay() - date.getDay() === 1;
+    let isYesterday =
+      isSameYear &&
+      isSameMonth &&
+      isSameWeek &&
+      now.getDay() - date.getDay() === 1;
 
     if (!isSameMonth) {
       dateFormat += "MMM d";
@@ -84,13 +92,14 @@ export default function MessageBubble({
       (dateFormat && format(date, dateFormat) + " at ") +
       format(date, timeFormat);
 
-    // if (isOneDayAgo) {
-    //   dateFormat = dateFormat.replace("EEE", "");
-    // displayTime =
-    //   "Yesterday" +
-    //   (format(date, dateFormat) + " at ") +
-    //   format(date, timeFormat);
-    // } else {
+    if (isYesterday) {
+      dateFormat = dateFormat.replace("EEE", "");
+      displayTime =
+        "Yesterday" +
+        (format(date, dateFormat) + " at ") +
+        format(date, timeFormat);
+    }
+    //else {
     if (isSameDay) {
       if (isSameHour) {
         let minutes = now.getMinutes() - date.getMinutes();
@@ -153,7 +162,7 @@ export default function MessageBubble({
   }
 
   // if ((!isNextSameSender) && (!isPreviousSameSender)) {
-  //   // && 
+  //   // &&
   //   bubbleClass = "bubble-only";
   // }
 
@@ -178,11 +187,19 @@ export default function MessageBubble({
         )}
         <tr className={bubbleClass}>
           <td>
-            <p className={isSent ? "sent" : "recieved"}>
+            <p className={isFromUserClass}>
               {message.message} {message.status === 0}
             </p>
           </td>
         </tr>
+        {index === len - 1 && isFromUser && (
+          <tr className="status">
+            <td>
+              <small>{isStatusSent ? "Sent" : "Seen"}</small>
+              {/* <Icon.Check className={isStatusSentClass} /> */}
+            </td>
+          </tr>
+        )}
       </>
     );
   } catch (e) {
@@ -205,7 +222,9 @@ export default function MessageBubble({
         )}
         <tr className={bubbleClass}>
           <td>
-            <p className={isSent ? "sent" : "recieved"}>Can't load message</p>
+            <p className={isFromUser ? "sent" : "recieved"}>
+              Can't load message
+            </p>
           </td>
         </tr>
       </>
