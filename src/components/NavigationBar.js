@@ -6,15 +6,14 @@ import myIconInverted from "../images/chatr_icon_inverted.png";
 //import myIcon from "../images/chatr_icon.png";
 import { useState } from "react";
 import * as Icon from "react-bootstrap-icons";
+import { auth, firestore } from "../firebase";
+import defaultUser from "../images/default_user.jpg";
 import {
   BrowserView,
   isBrowser,
   isMobile,
   MobileView,
 } from "react-device-detect";
-import { auth, firestore } from "../firebase";
-import defaultUser from "../images/default_user.jpg";
-import { slide as Menu } from "react-burger-menu";
 
 export default function NavigationBar() {
   //const handleClose = () => setShow(false);
@@ -33,15 +32,18 @@ export default function NavigationBar() {
     try {
       //setLoading(true);
       //if (auth.currentUser.uid != null) {
-      var doc = firestore.collection("users").doc(auth.currentUser.id);
-      if ((await doc.get()).exists) {
-        await doc.update({
+      var doc = firestore.collection("users").doc(auth.currentUser.uid);
+      await doc
+        .update({
           isLoggedIn: false,
+        })
+        .then(() => {
+          logout();
+        })
+        .finally(() => {
+          history("/login");
         });
-        await logout();
-      }
       //}
-      history("/login");
     } catch (e) {
       //setLoading(false);
       console.error(e.message);
@@ -60,78 +62,95 @@ export default function NavigationBar() {
   function handleOnError() {}
 
   return (
-    <Navbar bg="success" variant="dark">
-      <Container>
-        <ul className="nav">
-          <li>
-            <Link className="link active" to="/" title="Chatr">
-              <img
-                alt=""
-                src={myIconInverted}
-                width="30"
-                height="30"
-                className="d-inline-block align-top"
-              />
-            </Link>
-          </li>
-        </ul>
-        <Dropdown>
-          <Dropdown.Toggle
-            variant="success"
-            id="dropdown-basic"
-            title={displayName}
-            style={{ display: "inline-flex" }}
-          >
-            <Image
-              roundedCircle
-              onError={() => handleOnError}
-              src={(currentUser && currentUser.photoURL) || defaultUser}
-              alt="photoURL"
-              style={{ width: "1.5em" }}
-            />{" "}
-            &nbsp;
-          </Dropdown.Toggle>
-          <Dropdown.Menu>
-            <Dropdown.Header>
-              <Icon.PersonFill /> {displayName}
-            </Dropdown.Header>
-            <Link className="link dropdown-item" to="/update-profile">
+    <>
+      <Navbar bg="success" variant="dark">
+        <Container>
+          <ul className="nav">
+            <li>
+              <Link className="link active" to="/" title="Chatr">
+                <img
+                  alt=""
+                  src={myIconInverted}
+                  width="30"
+                  height="30"
+                  className="d-inline-block align-top"
+                />
+              </Link>
+            </li>
+          </ul>
+          {isBrowser && (
+            <BrowserView>
+              <Dropdown>
+                <Dropdown.Toggle
+                  variant="success"
+                  id="dropdown-basic"
+                  title={displayName}
+                  style={{ display: "inline-flex" }}
+                >
+                  <Image
+                    roundedCircle
+                    onError={() => handleOnError}
+                    src={(currentUser && currentUser.photoURL) || defaultUser}
+                    alt="photoURL"
+                    style={{ width: "1.5em" }}
+                  />{" "}
+                  &nbsp;
+                </Dropdown.Toggle>
+                <Dropdown.Menu>
+                  <Link className="link dropdown-item" to="/update-profile">
+                    <Icon.PersonFill /> {displayName}
+                  </Link>
+                  <Link className="link dropdown-item" to="/notifications">
+                    <Icon.BellFill /> Notifications
+                  </Link>
+                  <Dropdown.Divider></Dropdown.Divider>
+                  <Dropdown.Item onClick={() => handleLogout()}>
+                    <Icon.BoxArrowRight /> Log Out
+                  </Dropdown.Item>
+                </Dropdown.Menu>
+              </Dropdown>
+            </BrowserView>
+          )}
+          {isMobile && (
+            <MobileView>
+              <Icon.List onClick={handleOnOpen} style={{ color: "#fff" }} />
+            </MobileView>
+          )}
+        </Container>
+      </Navbar>
+      <div
+        className="menu"
+        style={{ display: showMobileMenu ? "list-item" : "none" }}
+      >
+        <div className="menu-links">
+          <div className="link">
+            <span>&nbsp;</span>
+            <Icon.XLg onClick={handleOnClose} />
+          </div>
+        </div>
+        <div className="menu-links">
+          <a className="link" href="/update-profile">
+            <span>
               <Icon.PersonFill /> Profile
-            </Link>
-            <Link className="link dropdown-item" to="/notifications">
+            </span>
+            {displayName}
+          </a>
+        </div>
+        <div className="menu-links">
+          <a className="link" href="/notifications">
+            <span>
               <Icon.BellFill /> Notifications
-            </Link>
-            <Dropdown.Divider></Dropdown.Divider>
-            <Dropdown.Item onClick={handleLogout}>
-              <Icon.BoxArrowRight /> Log Out
-            </Dropdown.Item>
-          </Dropdown.Menu>
-        </Dropdown>
-        {isBrowser && <BrowserView></BrowserView>}
-        {/* {isMobile && (
-          <MobileView>
-            <Menu
-              isOpen={showMobileMenu}
-              onOpen={handleOnOpen}
-              onClose={handleOnClose}
-              disableCloseOnEsc
-              noOverlay //customCrossIcon={ <img src="img/cross.svg" /> }
-            >
-              <Dropdown.Header>
-                <Icon.PersonFill /> {displayName}
-              </Dropdown.Header>
-              <Link className="link dropdown-item" to="/update-profile">
-                <Icon.PersonFill /> Profile
-              </Link>
-              <Link className="link dropdown-item" to="/notifications">
-                <Icon.BellFill /> Notifications
-              </Link>
-              <Link className="link dropdown-item" onClick={handleLogout}>
-                <Icon.BoxArrowRight /> Log Out
-              </Link>
-            </Menu>
-          </MobileView> */}
-      </Container>
-    </Navbar>
+            </span>
+          </a>
+        </div>
+        <div className="menu-links">
+          <div className="link" onClick={() => handleLogout()}>
+            <span>
+              <Icon.BoxArrowRight /> Logout
+            </span>
+          </div>
+        </div>
+      </div>
+    </>
   );
 }

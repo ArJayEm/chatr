@@ -19,104 +19,96 @@ export default function MessageBubble({
   let bubbleClass = "";
   const isStatusSent = message.status === 0;
   //const isStatusSentClass = isStatusSent ? "isSent" : "isRecieved";
-  //let newKey = message.id + index;
 
-  //function convertTime() {}
+  let date = new Date(
+    message.createdDate.seconds * 1000 +
+      message.createdDate.nanoseconds / 1000000
+  ); //.setUTCSeconds(d);
+  let now = new Date(Date.now());
 
   // if (index === 5) {
-  //   console.log(message?.createdDate); //new Date(d * 1000)
+  //   const fireBaseTime = date.toDateString();
+  //   const atTime = date.toLocaleTimeString();
+
+  //   console.log(fireBaseTime, atTime);
+  //   console.log(d.toDate());
   // }
 
-  function secondsToHms(d) {
-    let date = new Date(d.seconds * 1000 + d.nanoseconds / 1000000); //.setUTCSeconds(d);
-    let now = new Date(Date.now());
+  let dateFormat = "";
+  let timeFormat = "h:mm a";
 
-    // if (index === 5) {
-    //   const fireBaseTime = date.toDateString();
-    //   const atTime = date.toLocaleTimeString();
+  let isSameMonth = format(now, "MMM") === format(date, "MMM");
+  let isSameYear = format(now, "yy") === format(date, "yy");
+  let isSameWeek = format(now, "w") === format(date, "w");
+  let isSameDay = format(now, "d") === format(date, "d");
+  let isSameHour = format(now, "H") === format(date, "H");
+  let isSameMinute = format(now, "m") === format(date, "m");
+  let isWithinAWeek =
+    isSameYear && isSameMonth && date.getDay() - now.getDay() < 8;
+  let isYesterday =
+    isSameYear &&
+    isSameMonth &&
+    isSameWeek &&
+    now.getDay() - date.getDay() === 1;
 
-    //   console.log(fireBaseTime, atTime);
-    //   console.log(d.toDate());
-    // }
-
-    let dateFormat = "";
-    let timeFormat = "h:mm a";
-
-    let isSameMonth = format(now, "MMM") === format(date, "MMM");
-    let isSameYear = format(now, "yy") === format(date, "yy");
-    let isSameWeek = format(now, "w") === format(date, "w");
-    let isSameDay = format(now, "d") === format(date, "d");
-    let isSameHour = format(now, "H") === format(date, "H");
-    let isSameMinute = format(now, "m") === format(date, "m");
-    let isWithinAWeek =
-      isSameYear && isSameMonth && date.getDay() - now.getDay() < 8;
-    let isYesterday =
-      isSameYear &&
-      isSameMonth &&
-      isSameWeek &&
-      now.getDay() - date.getDay() === 1;
-
-    if (!isSameMonth) {
-      dateFormat += "MMM d";
-    }
-    if (!isSameYear) {
-      dateFormat += ", yyyy ";
-    }
-    if (!isSameDay) {
-      dateFormat += "EEE ";
-    }
-    if (!isSameWeek) {
-      dateFormat = dateFormat.replace("EEE", "");
-
-      if (isSameMonth) {
-        dateFormat += "MMM d ";
-      }
-    }
-
-    if (now.getDay() !== date.getDay()) {
-      //dateFormat += "MMM d ";
-    }
-    if (isWithinAWeek) {
-      //weekFormat = format(date, "EEE") + " ";
-      //dateFormat = dateFormat.replace("MMM d", "");
-    } else {
-      //dateFormat = dateFormat.replace("EEE", "");
-      //dateFormat += "MMM d ";
-    }
-    //not same hour
-    if (format(now, "h") !== format(date, "h")) {
-      //dateFormat += "h ";
-    }
-    let displayTime = "";
-    displayTime =
-      (dateFormat && format(date, dateFormat) + " at ") +
-      format(date, timeFormat);
-
-    if (isYesterday) {
-      dateFormat = dateFormat.replace("EEE", "");
-      displayTime =
-        "Yesterday" +
-        (format(date, dateFormat) + " at ") +
-        format(date, timeFormat);
-    }
-    //else {
-    if (isSameDay) {
-      if (isSameHour) {
-        let minutes = now.getMinutes() - date.getMinutes();
-        displayTime = minutes === 1 ? "a minute ago" : minutes + " minutes ago";
-
-        if (isSameMinute) {
-          displayTime = "now";
-        }
-      }
-      if (!isSameHour && now.getHours() - date.getHours() < 2) {
-        displayTime = "an hour ago";
-      }
-    }
-    // }
-
-    return displayTime;
+  if (!isSameMonth) {
+    dateFormat += "MMM d";
   }
+  if (!isSameYear) {
+    dateFormat += ", yyyy ";
+  }
+  if (!isSameDay) {
+    dateFormat += "EEE ";
+  }
+  if (!isSameWeek) {
+    dateFormat = dateFormat.replace("EEE", "");
+
+    if (isSameMonth) {
+      dateFormat += "MMM d ";
+    }
+  }
+
+  if (now.getDay() !== date.getDay()) {
+    //dateFormat += "MMM d ";
+  }
+  if (isWithinAWeek) {
+    //weekFormat = format(date, "EEE") + " ";
+    //dateFormat = dateFormat.replace("MMM d", "");
+  } else {
+    //dateFormat = dateFormat.replace("EEE", "");
+    //dateFormat += "MMM d ";
+  }
+  //not same hour
+  if (format(now, "h") !== format(date, "h")) {
+    //dateFormat += "h ";
+  }
+  let displayTime = "";
+  displayTime =
+    (dateFormat && format(date, dateFormat) + " at ") +
+    format(date, timeFormat);
+
+  if (isYesterday) {
+    dateFormat = dateFormat.replace("EEE", "");
+    displayTime =
+      "Yesterday" +
+      (format(date, dateFormat) + " at ") +
+      format(date, timeFormat);
+  }
+  //else {
+  if (isSameDay) {
+    if (isSameHour) {
+      let minutes = now.getMinutes() - date.getMinutes();
+      displayTime = minutes === 1 ? "a minute ago" : minutes + " minutes ago";
+
+      if (isSameMinute) {
+        displayTime = "now";
+      }
+    }
+    if (!isSameHour && now.getHours() - date.getHours() < 2) {
+      displayTime = "an hour ago";
+    }
+  }
+  // }
 
   if (index > 0) {
     sameTime =
@@ -180,7 +172,7 @@ export default function MessageBubble({
             )}
             <tr>
               <td>
-                <small>{secondsToHms(message.createdDate)}</small>
+                <small>{displayTime}</small>
               </td>
             </tr>
           </>
@@ -188,7 +180,13 @@ export default function MessageBubble({
         <tr className={bubbleClass}>
           <td>
             <p className={isFromUserClass}>
+              {/* {isFromUser && (
+                <small>{format(date, timeFormat)}&nbsp;&nbsp;&nbsp;</small>
+              )} */}
               {message.message} {message.status === 0}
+              {/* {!isFromUser && (
+                <small>&nbsp;&nbsp;&nbsp;{format(date, timeFormat)}</small>
+              )} */}
             </p>
           </td>
         </tr>

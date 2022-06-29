@@ -21,12 +21,12 @@ export default function Dashboard() {
 
   useEffect(
     () => {
-      if (auth.currentUser != null) {
-        saveUser();
-        setDashboardHeight();
-      } else {
-        history("/login");
-      }
+      //if (auth.currentUser != null) {
+      saveUser();
+      setDashboardHeight();
+      //} else {
+      //history("/login");
+      //}
     },
     //eslint-disable-next-line
     []
@@ -56,16 +56,17 @@ export default function Dashboard() {
     load();
 
     var doc = usersCollection.doc(auth.currentUser.uid);
-
+    console.log(auth.currentUser);
     if ((await doc.get()).exists) {
       await doc
         .update({
-          editedDate: auth.currentUser.metadata.lastSignInTime,
+          //editedDate: auth.currentUser.metadata.lastSignInTime,
           displayName: auth.currentUser.displayName ?? auth.currentUser.email,
           lastLogIn: auth.currentUser.metadata.lastSignInTime,
           providerData: auth.currentUser.providerData.map((e) => e)[0],
           isLoggedIn: true,
           //userCode: generateUserCode(),
+          config: auth.currentUser.auth.currentUser.auth.config,
         })
         .catch((e) => {
           catchError(e, "update-user-error.");
@@ -81,6 +82,7 @@ export default function Dashboard() {
           //userCode: generateUserCode(),
           userContacts: [],
           isLoggedIn: true,
+          config: auth.currentUser.auth.currentUser.auth.config,
         })
         .catch((e) => {
           catchError(e, "set-user-error.");

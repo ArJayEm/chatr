@@ -2,6 +2,7 @@ import { useEffect, useRef, useState } from "react";
 import { Alert, Button, Form, Image } from "react-bootstrap";
 import { useParams, Link } from "react-router-dom";
 import { auth, firestore } from "../firebase";
+//eslint-disable-next-line
 import NavigationBar from "./NavigationBar";
 
 //import { useAuthState } from "react-firebase-hooks/auth";
@@ -78,8 +79,7 @@ export default function Conversation() {
   );
 
   function setConversationsHeight() {
-    let navbarHeight =
-      document.getElementsByClassName("navbar")[0].offsetHeight;
+    let navbarHeight = 0; //document.getElementsByClassName("navbar")[0].offsetHeight;
     let contactHeight =
       document.getElementsByClassName("contact")[0].offsetHeight;
     let replyHeight = document.getElementById("Reply").offsetHeight;
@@ -228,7 +228,7 @@ export default function Conversation() {
 
   return (
     <div className="page">
-      <NavigationBar />
+      {/* <NavigationBar /> */}
       <div className="contact contact_small">
         <Link className="link" to="/">
           <Icon.ArrowLeftShort style={{ color: "#198754" }} />
@@ -324,7 +324,8 @@ export default function Conversation() {
       </div>
       <div
         id="NewMessages"
-        style={{ display: hasUnseen && withScroll ? "" : "none" }}
+        // style={{ display: hasUnseen && withScroll ? "" : "none" }}
+        className={hasUnseen ? "shown" : ""}
       >
         <button type="button" onClick={scrollToBottom}>
           {/* <small>

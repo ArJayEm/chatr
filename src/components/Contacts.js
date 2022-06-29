@@ -31,11 +31,11 @@ export default function Contacts() {
 
   useEffect(
     () => {
-      if (auth.currentUser != null) {
-        getUser();
-      } else {
-        history("/login");
-      }
+      //if (auth.currentUser != null) {
+      getUser();
+      // } else {
+      //   history("/login");
+      // }
     },
     //eslint-disable-next-line
     []
@@ -57,7 +57,7 @@ export default function Contacts() {
               getContacts(userContacts);
             }
           } else {
-            history("/login");
+            //history("/login");
           }
         }
         setLoading(false);
