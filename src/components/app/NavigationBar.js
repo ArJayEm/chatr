@@ -1,12 +1,7 @@
 import { useEffect, useState } from "react";
-import { Container, Dropdown, Image, Navbar } from "react-bootstrap";
+import { Container, Image, Navbar } from "react-bootstrap";
 import * as Icon from "react-bootstrap-icons";
-import {
-  BrowserView,
-  isBrowser,
-  isMobile,
-  MobileView,
-} from "react-device-detect";
+import { isMobile, isDesktop } from "react-device-detect";
 import { Link, useNavigate } from "react-router-dom";
 
 import { auth, firestore } from "../../firebase";
@@ -20,15 +15,29 @@ export default function NavigationBar() {
   const history = useNavigate();
   const displayName =
     currentUser && (currentUser.displayName ?? currentUser.email);
-  const [showMobileMenu, setShowMobileMenu] = useState(false);
+  const [showMobileMenu, setShowMobileMenu] = useState("none");
+  const menuClass = "user-dropdown" + (isMobile ? " mobile" : " desktop");
+  const userImageSrc =
+    (currentUser && currentUser.photoURL) || defaultUserImage;
+  const [showLogoutModal, setShowLogoutModal] = useState("none");
 
   useEffect(() => {
     //get navigation height
     const navbarHeight =
-      document.getElementsByClassName("navbar")[0].offsetHeight;
+      document.getElementsByClassName("navbar")[0].offsetHeight +
+      (isDesktop ? 18 : 0);
     //set menu top offset
     document.getElementsByClassName("menu")[0].style.top = navbarHeight;
   }, []);
+
+  function onLogoutClick() {
+    setShowLogoutModal(showLogoutModal === "none" ? "block" : "none");
+  }
+
+  function onLogoutCancel() {
+    setShowLogoutModal(showLogoutModal === "none" ? "block" : "none");
+    handleOnUserDropDownClick();
+  }
 
   async function handleLogout() {
     try {
@@ -50,12 +59,8 @@ export default function NavigationBar() {
     }
   }
 
-  function handleOnOpen() {
-    setShowMobileMenu(true);
-  }
-
-  function handleOnClose() {
-    setShowMobileMenu(false);
+  function handleOnUserDropDownClick() {
+    setShowMobileMenu(showMobileMenu === "grid" ? "none" : "grid");
   }
 
   function handleOnError() {}
@@ -63,116 +68,81 @@ export default function NavigationBar() {
   return (
     <>
       <Navbar bg="success" variant="dark">
-        <Container>
-          <ul className="nav">
-            <li>
-              <Link className="link active" to="/" title="Chatr">
-                <img
-                  alt=""
-                  src={myIconInverted}
-                  width="30"
-                  height="30"
-                  className="d-inline-block align-top"
-                />
-                {/* <Icon.ChatSquareFill /> */}
-              </Link>
-            </li>
-          </ul>
-          {isBrowser && (
-            <BrowserView>
-              <Dropdown>
-                <Dropdown.Toggle
-                  variant="success"
-                  id="dropdown-basic"
-                  title={displayName}
-                  style={{ display: "inline-flex" }}
-                >
-                  <Image
-                    roundedCircle
-                    onError={() => handleOnError}
-                    src={
-                      (currentUser && currentUser.photoURL) || defaultUserImage
-                    }
-                    alt="photoURL"
-                    style={{ width: "1.5em" }}
-                  />
-                  &nbsp; &nbsp;
-                </Dropdown.Toggle>
-                <Dropdown.Menu>
-                  <Link className="link dropdown-item" to="/update-profile">
+        <Container style={{ position: isDesktop ? "relative" : "unset" }}>
+          <Link className="link active" to="/" title="Chatr">
+            <img
+              alt=""
+              src={myIconInverted}
+              width="30"
+              height="30"
+              className="d-inline-block align-top"
+            />
+            {/* <Icon.ChatSquareFill /> */}
+          </Link>
+          <div className={menuClass}>
+            <button className="btn">
+              <Icon.BellFill />
+            </button>
+            <button className="btn" title={displayName}>
+              <Image
+                roundedCircle
+                onError={() => handleOnError}
+                src={userImageSrc}
+                alt="photoURL"
+                onClick={handleOnUserDropDownClick}
+              />
+            </button>
+            <div className="menu" style={{ display: showMobileMenu }}>
+              <div
+                className="backdrop"
+                onClick={handleOnUserDropDownClick}
+              ></div>
+              <div className="menu-links">
+                <a className="link" href="/update-profile">
+                  <span>
                     <Icon.PersonFill /> {displayName}
-                  </Link>
-                  <Link className="link dropdown-item" to="/notifications">
+                  </span>
+                </a>
+              </div>
+              <div className="menu-links">
+                <a className="link" href="/notifications">
+                  <span>
                     <Icon.BellFill /> Notifications
-                  </Link>
-                  <Dropdown.Divider></Dropdown.Divider>
-                  <Dropdown.Item onClick={() => handleLogout()}>
+                  </span>
+                </a>
+              </div>
+              <div className="menu-links separator"></div>
+              {/* <div className="menu-links"><a className="link" href="/logout">
+                  <span>
                     <Icon.BoxArrowRight /> Log Out
-                  </Dropdown.Item>
-                </Dropdown.Menu>
-              </Dropdown>
-            </BrowserView>
-          )}
-          {isMobile && (
-            <MobileView style={{ padding: "0 0.3em" }}>
-              <button className="btn user-dropdown">
-                <Image
-                  roundedCircle
-                  onError={() => handleOnError}
-                  src={
-                    (currentUser && currentUser.photoURL) || defaultUserImage
-                  }
-                  alt="photoURL"
-                  onClick={() =>
-                    showMobileMenu ? handleOnClose() : handleOnOpen()
-                  }
-                />
-                {/* &nbsp;&nbsp;
-                {showMobileMenu ? <Icon.CaretUpFill /> : <Icon.CaretDownFill />} */}
-              </button>
-              {/* {showMobileMenu ? (
-                <Icon.XLg
-                  onClick={handleOnClose}
-                  style={{ color: "#fff", fontSize: "1.5em" }}
-                />
-              ) : (
-                <Icon.List
-                  onClick={handleOnOpen}
-                  style={{ color: "#fff", fontSize: "1.5em" }}
-                />
-              )} */}
-            </MobileView>
-          )}
+                  </span>
+                </a>
+                <Link className="link" to="/logout">
+                  Logout
+                </Link> 
+              </div>*/}
+              <div className="menu-links">
+                <div className="link" onClick={onLogoutClick}>
+                  <span>
+                    <Icon.BoxArrowRight /> Log Out
+                  </span>
+                </div>
+              </div>
+            </div>
+          </div>
         </Container>
       </Navbar>
       <div
-        className="menu"
-        style={{ display: showMobileMenu ? "list-item" : "none" }}
+        id="LogoutModal"
+        className="modal"
+        style={{ display: showLogoutModal }}
       >
-        <div className="backdrop" onClick={() => handleOnClose()}></div>
-        <div className="menu-links">
-          <a className="link" href="/update-profile">
-            <span>
-              <Icon.PersonFill /> Profile
-            </span>
-            {displayName}
-          </a>
-        </div>
-        <div className="menu-links">
-          <a className="link" href="/notifications">
-            <span>
-              <Icon.BellFill /> Notifications
-            </span>
-          </a>
-        </div>
-        <div className="menu-links separator"></div>
-        <div className="menu-links">
-          <div className="link" onClick={() => handleLogout()}>
-            <span>
-              <Icon.BoxArrowRight /> Logout
-            </span>
-          </div>
-        </div>
+        <button className="btn" onClick={onLogoutCancel}>
+          Cancel
+        </button>
+        <button className="btn" onClick={handleLogout}>
+          Log Out
+        </button>
       </div>
     </>
   );

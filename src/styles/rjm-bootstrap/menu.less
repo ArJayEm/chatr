@@ -1,41 +1,115 @@
-.menu {
-    width: 100%;
-    margin: 0;
-    padding: 0;
-    position: absolute;
-    z-index: 1;
-    background-color: #fff;
-    //height: 100vh;
-    //display: list-item;
-    //top: 0;
+@import '../rjm-bootstrap/variables.less';
 
-    .backdrop {
-        height: 100vh;
-        width:100%;
-        z-index: -1;
-        position: fixed;
-        background-color: rgba(0, 0, 0, 0.29);
-    }
+.rjm-bootstrap {    
+    nav {
+        .user-dropdown {
+            .menu {
+                position: absolute;
+                z-index: 1;
+                background-color: #fff;
+                border-radius: 0;
 
-    .menu-links {
-        padding: 1em;
-        border-bottom: 1px solid rgba(0,0,0,.125);
-        background-color: #fff;
+                .backdrop {
+                    height: 100vh;
+                    width:100%;
+                    z-index: -1;
+                    position: fixed;
+                    background-color: rgba(0, 0, 0, 0.29);
+                }
+            
+                .menu-links {
+                    padding: 1em;
+                    border-bottom: 1px solid rgba(0,0,0,.125);
+                    background-color: #fff;
 
-        // &:first-child {
-        //     text-align: right;
-        // }
+                    &:hover, &:focus {
+                        background-color: #eee !important;
+                        cursor: pointer;
+                    }
+            
+                    // &:first-child {
+                    //     text-align: right;
+                    // }
+            
+                    &.separator {
+                        padding: 1px 0 !important;
+                    }
+            
+                    .link {
+                        display: inline-flex;
+                        justify-content: space-between;
+                        text-decoration: none;
+                        color: #000;
+                        width: 100%;
+                    }
+                }
+            }
 
-        &.separator {
-            padding: 1px 0 !important;
-        }
+            &.desktop {
+                .menu {
+                    max-width: 200px;
+                    right: 0;
+                    box-shadow: 0 0 10px #878787;
+                    margin: 0.5em 0;
+                    border-radius: 0.5em !important;
+                
+                    .backdrop {
+                        height: unset;
+                    }
+            
+                    .menu-links {
+                        padding: 0.5em 1em;
+            
+                        &:nth-child(2) {
+                            border-top-left-radius: 0.5em !important;
+                            border-top-right-radius: 0.5em !important;
+                        }
+            
+                        &:last-child {
+                            border-bottom-left-radius: 0.5em !important;
+                            border-bottom-right-radius: 0.5em !important;
+                        }
+            
+                        &.separator {
+                            padding: 0 !important
+                        }
+                    }
+                }
+            }
+        
+            &.mobile {
+                .menu {
+                    width: 100%;
+                    margin: 0;
+                    padding: 0;
+                    left: 0;
+                    //height: 100vh;
+                    //display: list-item;
+                    //top: 0; 
+                }
+            }
 
-        .link {
-            display: inline-flex;
-            justify-content: space-between;
-            text-decoration: none;
-            color: #000;
-            width: 100%;
+            .btn {    
+                &:focus, &:active {
+                    outline: 0;
+                    //background-color: darken(@bs-success, 5%);
+
+                    svg {
+                        color: #eee !important;
+                    }
+                }
+
+                border-radius: 50%;
+                padding: 0.30em;
+    
+                img {
+                    width: 2em !important;
+                }
+    
+                svg {
+                    color: #fff;
+                }
+            }
         }
     }
 }

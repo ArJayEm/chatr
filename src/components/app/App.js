@@ -20,6 +20,7 @@ import Login from "../user/Login";
 import SignUp from "../user/SignUp";
 import UpdateProfile from "../user/UpdateProfile";
 import NotFound from "./NotFound";
+import Logout from "../user/Logout";
 
 function App() {
   return (
@@ -41,6 +42,7 @@ function App() {
             <Route exact path="/addcontact" element={<AddContact />} />
             <Route path="/conversation/:uid" element={<Conversation />} />
             <Route component={NotFound} />
+            <Route exact path="/logout" element={<Logout />} />
           </Routes>
         </AuthProvider>
       </Router>

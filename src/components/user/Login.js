@@ -69,7 +69,7 @@ export default function Continue() {
       <div className="w-100" style={{ maxWidth: "400px" }}>
         <Card>
           <Card.Body>
-            <h2 className="text-center mb-4">Log In</h2>
+            <h2 className="text-center">Log In</h2>
             {error && <Alert variant="danger">{error}</Alert>}
             {message && <Alert variant="success">{message}</Alert>}
             <Form onSubmit={handleSubmit}>

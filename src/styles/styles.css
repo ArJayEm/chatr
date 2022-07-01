@@ -104,50 +104,97 @@ ul.contacts li h6 {
   -webkit-box-orient: vertical;
   line-height: 1.3;
 }
-.menu {
-  width: 100%;
-  margin: 0;
-  padding: 0;
+.rjm-bootstrap nav .user-dropdown .menu {
   position: absolute;
   z-index: 1;
   background-color: #fff;
+  border-radius: 0;
 }
-.menu .backdrop {
+.rjm-bootstrap nav .user-dropdown .menu .backdrop {
   height: 100vh;
   width: 100%;
   z-index: -1;
   position: fixed;
   background-color: rgba(0, 0, 0, 0.29);
 }
-.menu .menu-links {
+.rjm-bootstrap nav .user-dropdown .menu .menu-links {
   padding: 1em;
   border-bottom: 1px solid rgba(0, 0, 0, 0.125);
   background-color: #fff;
 }
-.menu .menu-links.separator {
+.rjm-bootstrap nav .user-dropdown .menu .menu-links:hover,
+.rjm-bootstrap nav .user-dropdown .menu .menu-links:focus {
+  background-color: #eee !important;
+  cursor: pointer;
+}
+.rjm-bootstrap nav .user-dropdown .menu .menu-links.separator {
   padding: 1px 0 !important;
 }
-.menu .menu-links .link {
+.rjm-bootstrap nav .user-dropdown .menu .menu-links .link {
   display: inline-flex;
   justify-content: space-between;
   text-decoration: none;
   color: #000;
   width: 100%;
 }
-.rjm-bootstrap nav button.user-dropdown {
+.rjm-bootstrap nav .user-dropdown.desktop .menu {
+  max-width: 200px;
+  right: 0;
+  box-shadow: 0 0 10px #878787;
+  margin: 0.5em 0;
+  border-radius: 0.5em !important;
+}
+.rjm-bootstrap nav .user-dropdown.desktop .menu .backdrop {
+  height: unset;
+}
+.rjm-bootstrap nav .user-dropdown.desktop .menu .menu-links {
+  padding: 0.5em 1em;
+}
+.rjm-bootstrap nav .user-dropdown.desktop .menu .menu-links:nth-child(2) {
+  border-top-left-radius: 0.5em !important;
+  border-top-right-radius: 0.5em !important;
+}
+.rjm-bootstrap nav .user-dropdown.desktop .menu .menu-links:last-child {
+  border-bottom-left-radius: 0.5em !important;
+  border-bottom-right-radius: 0.5em !important;
+}
+.rjm-bootstrap nav .user-dropdown.desktop .menu .menu-links.separator {
+  padding: 0 !important;
+}
+.rjm-bootstrap nav .user-dropdown.mobile .menu {
+  width: 100%;
+  margin: 0;
+  padding: 0;
+  left: 0;
+}
+.rjm-bootstrap nav .user-dropdown .btn {
   border-radius: 50%;
   padding: 0.3em;
 }
-.rjm-bootstrap nav button.user-dropdown img {
+.rjm-bootstrap nav .user-dropdown .btn:focus,
+.rjm-bootstrap nav .user-dropdown .btn:active {
+  outline: 0;
+}
+.rjm-bootstrap nav .user-dropdown .btn:focus svg,
+.rjm-bootstrap nav .user-dropdown .btn:active svg {
+  color: #eee !important;
+}
+.rjm-bootstrap nav .user-dropdown .btn img {
   width: 2em !important;
 }
-.rjm-bootstrap nav button.user-dropdown svg {
-  color: #fff !important;
+.rjm-bootstrap nav .user-dropdown .btn svg {
+  color: #fff;
 }
-.rjm-bootstrap nav button:focus,
-.rjm-bootstrap nav button:active {
-  outline: 0;
-  background-color: #157147;
+.rjm-bootstrap .modal {
+  position: absolute;
+  right: 0;
+  left: 0;
+  width: 100%;
+  height: 100vh;
+  background-color: rgba(0, 0, 0, 0.29);
+}
+nav.navbar {
+  padding: 0;
 }
 nav.appbar {
   align-items: center;
