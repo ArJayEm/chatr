@@ -1,12 +1,11 @@
 import { useEffect, useRef, useState } from "react";
-import { Alert, Button, Card, Container, Form, Image } from "react-bootstrap";
+import { Alert, Button, Container, Form, Image } from "react-bootstrap";
 import QRCode from "react-qr-code";
-import { Link } from "react-router-dom";
 
 import { auth, firestore } from "../../firebase";
 import defaultUserImage from "../../images/default_user.jpg";
-import { useAuth } from "../context/AuthContext";
 import AppBar from "../app/AppBar";
+import { useAuth } from "../context/AuthContext";
 
 export default function UpdateProfile() {
   const displayNameRef = useRef();
@@ -109,110 +108,92 @@ export default function UpdateProfile() {
   return (
     <>
       <AppBar title="Profile" />
-      <Container
-        className="d-flex align-items-center justify-content-center"
-        style={{ minHeight: "100vh" }}
-      >
-        <div className="w-100" style={{ maxWidth: "400px" }}>
-          {!loading && (
-            <Card>
-              <Card.Body>
-                <h2 className="text-center">Profile</h2>
-                {message && <Alert variant="success">{message}</Alert>}
-                {error && <Alert variant="danger">{error}</Alert>}
-                {user && (
-                  <div className="w-100 text-center mb-2">
-                    <Image
-                      roundedCircle
-                      onError={() => handleOnError}
-                      src={
-                        (currentUser && currentUser.photoURL) ||
-                        defaultUserImage
-                      }
-                      alt=""
-                      style={{ width: "6em" }}
-                    />
-                    <div style={{ background: "white", padding: "16px" }}>
-                      <QRCode
-                        value={user.userCode} //auth.currentUser.providerData[0].uid
-                        fgColor="#198754"
-                        size={144}
-                        title={displayName}
-                      />
-                    </div>
-                    <h6>{user.userCode}</h6>
-                  </div>
-                )}
-                <Form onSubmit={handleSubmit}>
-                  <Form.Group id="displayName" className="mb-2">
-                    <label>Name</label>
-                    <Form.Control
-                      type="text"
-                      ref={displayNameRef}
-                      required
-                      defaultValue={displayName}
-                      disabled={true}
-                    />
-                  </Form.Group>
-                  <Form.Group id="email" className="mb-2">
-                    <label>Email</label>
-                    <Form.Control
-                      type="email"
-                      ref={emailRef}
-                      required
-                      defaultValue={currentUser.email}
-                      disabled={updatable}
-                    />
-                  </Form.Group>
-                  <Form.Group id="password" className="mb-2">
-                    <label>Password</label>
-                    <Form.Control
-                      type="password"
-                      ref={passwordRef}
-                      autoComplete="on"
-                      placeholder="Leave blank to keep the same password"
-                      disabled={updatable}
-                    />
-                  </Form.Group>
-                  <Form.Group id="confirm-password" className="mb-2">
-                    <label>Confirm Password</label>
-                    <Form.Control
-                      type="password"
-                      ref={confirmpasswordRef}
-                      autoComplete="on"
-                      placeholder="Leave blank to keep the same password"
-                      disabled={updatable}
-                    />
-                  </Form.Group>
-                  <div
-                    className="w-100 mt-4"
-                    style={{
-                      display: "grid",
-                      gridGap: "0.5em",
-                      gridTemplateColumns: "1fr 1fr",
-                    }}
-                  >
-                    <Button variant="light" disabled={loading} type="button">
-                      <Link to="/">Back</Link>
-                    </Button>
-                    <Button
-                      variant="success"
-                      disabled={updatable || loading}
-                      type="submit"
-                    >
-                      Update
-                    </Button>
-                  </div>
-                </Form>
-              </Card.Body>
-            </Card>
-          )}
-          {/* <div className="w-100 text-center mt-2">
-            <Link to="/" style={{ textDecoration: "none" }}>
-              Back
-            </Link>
-          </div> */}
-        </div>
+      <Container>
+        {!loading && (
+          <div className="card">
+            {message && <Alert variant="success">{message}</Alert>}
+            {error && <Alert variant="danger">{error}</Alert>}
+            {user && (
+              <div className="w-100 text-center">
+                <div
+                  style={{
+                    background: "white",
+                    padding: "16px",
+                    display: "flex",
+                    columnGap: "1em",
+                    justifyContent: "center",
+                  }}
+                >
+                  <Image
+                    roundedCircle
+                    onError={() => handleOnError}
+                    src={
+                      (currentUser && currentUser.photoURL) || defaultUserImage
+                    }
+                    alt=""
+                    style={{ width: "6em" }}
+                  />
+                  <QRCode
+                    value={user.userCode}
+                    fgColor="#198754"
+                    size={94}
+                    title={user.userCode}
+                  />
+                </div>
+              </div>
+            )}
+            <Form onSubmit={handleSubmit}>
+              <Form.Group id="displayName" className="mb-2">
+                <label>Name</label>
+                <Form.Control
+                  type="text"
+                  ref={displayNameRef}
+                  required
+                  defaultValue={displayName}
+                  disabled={true}
+                />
+              </Form.Group>
+              <Form.Group id="email" className="mb-2">
+                <label>Email</label>
+                <Form.Control
+                  type="email"
+                  ref={emailRef}
+                  required
+                  defaultValue={currentUser.email}
+                  disabled={updatable}
+                />
+              </Form.Group>
+              <Form.Group id="password" className="mb-2">
+                <label>Password</label>
+                <Form.Control
+                  type="password"
+                  ref={passwordRef}
+                  autoComplete="on"
+                  placeholder="Leave blank to keep the same password"
+                  disabled={updatable}
+                />
+              </Form.Group>
+              <Form.Group id="confirm-password" className="mb-2">
+                <label>Confirm Password</label>
+                <Form.Control
+                  type="password"
+                  ref={confirmpasswordRef}
+                  autoComplete="on"
+                  placeholder="Leave blank to keep the same password"
+                  disabled={updatable}
+                />
+              </Form.Group>
+              <Button
+                className="w-100"
+                variant="success"
+                disabled={updatable || loading}
+                type="submit"
+              >
+                Update
+              </Button>
+            </Form>
+          </div>
+        )}
       </Container>
     </>
   );

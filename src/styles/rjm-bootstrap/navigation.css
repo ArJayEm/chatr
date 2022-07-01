@@ -1,3 +1,18 @@
+.rjm-bootstrap nav button.user-dropdown {
+  border-radius: 50%;
+  padding: 0.3em;
+}
+.rjm-bootstrap nav button.user-dropdown img {
+  width: 2em !important;
+}
+.rjm-bootstrap nav button.user-dropdown svg {
+  color: #fff !important;
+}
+.rjm-bootstrap nav button:focus,
+.rjm-bootstrap nav button:active {
+  outline: 0;
+  background-color: #157147;
+}
 nav.appbar {
   align-items: center;
   width: 100%;
@@ -53,6 +68,7 @@ nav .dropdown-toggle::after {
 }
 nav .container {
   padding: 0 !important;
+  justify-content: space-between !important;
 }
 .dropdown-menu.show {
   right: 0 !important;

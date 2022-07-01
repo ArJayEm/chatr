@@ -127,7 +127,7 @@ export default function AddContact() {
 
   return (
     <>
-      <AppBar title="Add Contact" />
+      <AppBar title="Contacts" />
       <Container className="d-flex" style={{ minHeight: "100vh" }}>
         <div className="w-100">
           {error && <Alert variant="danger">{error}</Alert>}

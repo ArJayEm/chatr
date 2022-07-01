@@ -1,12 +1,16 @@
 @import '../rjm-bootstrap/variables.less';
 
 .rjm-bootstrap {
-    button {
-        a {
-            text-decoration: none;
+    a, button {
+        border-radius: 0.5em;
+        align-items: center;
+        align-items: center;
+
+        a {    
+            text-decoration: none !important;
             color: #000;
         }
-        
+
         &.btn {
             outline: 0;
             border: 0;
@@ -14,6 +18,14 @@
             &.wide {
                 width: 100%;
             }
+        }
+
+        &.search {
+            background-color: #eee !important;
+        }
+
+        span {
+            text-decoration: none;
         }
     }
 }

@@ -1,11 +1,27 @@
+.rjm-bootstrap a,
+.rjm-bootstrap button {
+  border-radius: 0.5em;
+  align-items: center;
+}
+.rjm-bootstrap a a,
 .rjm-bootstrap button a {
-  text-decoration: none;
+  text-decoration: none !important;
   color: #000;
 }
+.rjm-bootstrap a.btn,
 .rjm-bootstrap button.btn {
   outline: 0;
   border: 0;
 }
+.rjm-bootstrap a.btn.wide,
 .rjm-bootstrap button.btn.wide {
   width: 100%;
+}
+.rjm-bootstrap a.search,
+.rjm-bootstrap button.search {
+  background-color: #eee !important;
+}
+.rjm-bootstrap a span,
+.rjm-bootstrap button span {
+  text-decoration: none;
 }

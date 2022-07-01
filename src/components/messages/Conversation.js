@@ -8,7 +8,6 @@ import { auth, firestore } from "../../firebase";
 import defaultUserImage from "../../images/default_user.jpg";
 import MessageBubble from "./MessageBubble";
 
-
 export default function Conversation() {
   const [error, setError] = useState("");
   const [message, setMessage] = useState("");
@@ -348,6 +347,7 @@ export default function Conversation() {
         </Link>
         <div className="subForm">
           <Form.Control
+            className="form"
             type="text"
             ref={messageRef}
             onKeyUp={onKeyUp}

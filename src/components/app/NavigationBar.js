@@ -95,8 +95,8 @@ export default function NavigationBar() {
                     }
                     alt="photoURL"
                     style={{ width: "1.5em" }}
-                  />{" "}
-                  &nbsp;
+                  />
+                  &nbsp; &nbsp;
                 </Dropdown.Toggle>
                 <Dropdown.Menu>
                   <Link className="link dropdown-item" to="/update-profile">
@@ -114,8 +114,23 @@ export default function NavigationBar() {
             </BrowserView>
           )}
           {isMobile && (
-            <MobileView>
-              {showMobileMenu ? (
+            <MobileView style={{ padding: "0 0.3em" }}>
+              <button className="btn user-dropdown">
+                <Image
+                  roundedCircle
+                  onError={() => handleOnError}
+                  src={
+                    (currentUser && currentUser.photoURL) || defaultUserImage
+                  }
+                  alt="photoURL"
+                  onClick={() =>
+                    showMobileMenu ? handleOnClose() : handleOnOpen()
+                  }
+                />
+                {/* &nbsp;&nbsp;
+                {showMobileMenu ? <Icon.CaretUpFill /> : <Icon.CaretDownFill />} */}
+              </button>
+              {/* {showMobileMenu ? (
                 <Icon.XLg
                   onClick={handleOnClose}
                   style={{ color: "#fff", fontSize: "1.5em" }}
@@ -125,7 +140,7 @@ export default function NavigationBar() {
                   onClick={handleOnOpen}
                   style={{ color: "#fff", fontSize: "1.5em" }}
                 />
-              )}
+              )} */}
             </MobileView>
           )}
         </Container>
@@ -134,7 +149,7 @@ export default function NavigationBar() {
         className="menu"
         style={{ display: showMobileMenu ? "list-item" : "none" }}
       >
-        <div className="backdrop"></div>
+        <div className="backdrop" onClick={() => handleOnClose()}></div>
         <div className="menu-links">
           <a className="link" href="/update-profile">
             <span>
@@ -150,6 +165,7 @@ export default function NavigationBar() {
             </span>
           </a>
         </div>
+        <div className="menu-links separator"></div>
         <div className="menu-links">
           <div className="link" onClick={() => handleLogout()}>
             <span>

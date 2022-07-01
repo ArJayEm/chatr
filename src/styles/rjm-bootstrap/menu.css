@@ -14,9 +14,12 @@
   background-color: rgba(0, 0, 0, 0.29);
 }
 .menu .menu-links {
-  padding: 0.5em 1em;
+  padding: 1em;
   border-bottom: 1px solid rgba(0, 0, 0, 0.125);
   background-color: #fff;
+}
+.menu .menu-links.separator {
+  padding: 1px 0 !important;
 }
 .menu .menu-links .link {
   display: inline-flex;

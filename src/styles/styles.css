@@ -1,13 +1,29 @@
+.rjm-bootstrap a,
+.rjm-bootstrap button {
+  border-radius: 0.5em;
+  align-items: center;
+}
+.rjm-bootstrap a a,
 .rjm-bootstrap button a {
-  text-decoration: none;
+  text-decoration: none !important;
   color: #000;
 }
+.rjm-bootstrap a.btn,
 .rjm-bootstrap button.btn {
   outline: 0;
   border: 0;
 }
+.rjm-bootstrap a.btn.wide,
 .rjm-bootstrap button.btn.wide {
   width: 100%;
+}
+.rjm-bootstrap a.search,
+.rjm-bootstrap button.search {
+  background-color: #eee !important;
+}
+.rjm-bootstrap a span,
+.rjm-bootstrap button span {
+  text-decoration: none;
 }
 ul.contacts {
   list-style: none;
@@ -104,9 +120,12 @@ ul.contacts li h6 {
   background-color: rgba(0, 0, 0, 0.29);
 }
 .menu .menu-links {
-  padding: 0.5em 1em;
+  padding: 1em;
   border-bottom: 1px solid rgba(0, 0, 0, 0.125);
   background-color: #fff;
+}
+.menu .menu-links.separator {
+  padding: 1px 0 !important;
 }
 .menu .menu-links .link {
   display: inline-flex;
@@ -114,6 +133,21 @@ ul.contacts li h6 {
   text-decoration: none;
   color: #000;
   width: 100%;
+}
+.rjm-bootstrap nav button.user-dropdown {
+  border-radius: 50%;
+  padding: 0.3em;
+}
+.rjm-bootstrap nav button.user-dropdown img {
+  width: 2em !important;
+}
+.rjm-bootstrap nav button.user-dropdown svg {
+  color: #fff !important;
+}
+.rjm-bootstrap nav button:focus,
+.rjm-bootstrap nav button:active {
+  outline: 0;
+  background-color: #157147;
 }
 nav.appbar {
   align-items: center;
@@ -170,6 +204,7 @@ nav .dropdown-toggle::after {
 }
 nav .container {
   padding: 0 !important;
+  justify-content: space-between !important;
 }
 .dropdown-menu.show {
   right: 0 !important;
@@ -403,6 +438,34 @@ ul#Users li {
   max-width: 300px;
   text-overflow: ellipsis;
 }
+.form {
+  width: 100%;
+  display: flex;
+  padding: 0;
+}
+.form input {
+  background-color: #eee;
+  padding: 0 0.8em;
+}
+.form input,
+.form .btn {
+  border-radius: 0 !important;
+  border: 1px solid #ced4da !important;
+}
+.form input:first-child,
+.form .btn:first-child {
+  border-top-left-radius: 0.5em !important;
+  border-bottom-left-radius: 0.5em !important;
+  border-top-right-radius: 0 !important;
+  border-bottom-right-radius: 0 !important;
+}
+.form input:last-child,
+.form .btn:last-child {
+  border-top-left-radius: 0 !important;
+  border-bottom-left-radius: 0 !important;
+  border-top-right-radius: 0.5em !important;
+  border-bottom-right-radius: 0.5em !important;
+}
 #Reply {
   max-height: 54px;
   width: 100vw;
@@ -427,8 +490,8 @@ ul#Users li {
   width: 100%;
 }
 .form-group input {
-  border-top-left-radius: 0.5em;
-  border-bottom-left-radius: 0.5em;
+  border-top-left-radius: 0.5em !important;
+  border-bottom-left-radius: 0.5em !important;
 }
 .form-group button {
   line-height: 2;
@@ -437,11 +500,19 @@ ul#Users li {
   border-top: 1px solid #ccc;
   border-right: 1px solid #ccc;
   border-bottom: 1px solid #ccc;
+  border-radius: 0 !important;
 }
 .form-group button:last-child {
-  border-top-right-radius: 0.5em;
-  border-bottom-right-radius: 0.5em;
+  border-top-right-radius: 0.5em !important;
+  border-bottom-right-radius: 0.5em !important;
 }
 .container {
-  padding: 0.5em;
+  padding: 1em;
+  display: flex !important;
+  justify-content: center !important;
+}
+.container .card {
+  padding: 1em;
+  max-width: 600px;
+  width: 100% !important;
 }

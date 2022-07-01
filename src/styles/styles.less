@@ -314,6 +314,36 @@ ul#Users {
     }
 }
 
+.form {
+    width: 100%;
+    display: flex;
+    padding: 0;
+
+    input {
+        background-color: #eee;
+        padding: 0 0.8em;
+    }
+
+    input, .btn {
+        border-radius: 0 !important;
+        border: 1px solid #ced4da !important;
+
+        &:first-child {
+            border-top-left-radius: 0.5em !important;
+            border-bottom-left-radius: 0.5em !important;
+            border-top-right-radius: 0 !important;
+            border-bottom-right-radius: 0 !important;
+        }
+
+        &:last-child {
+            border-top-left-radius: 0 !important;
+            border-bottom-left-radius: 0 !important;
+            border-top-right-radius: 0.5em !important;
+            border-bottom-right-radius: 0.5em !important;
+        }
+    }
+}
+
 #Reply {
     max-height: 54px;
     width: 100vw;
@@ -354,8 +384,8 @@ ul#Users {
 
     input {
         //width: 100%;
-        border-top-left-radius: 0.5em;
-        border-bottom-left-radius: 0.5em;
+        border-top-left-radius: 0.5em !important;
+        border-bottom-left-radius: 0.5em !important;
 
     }
 
@@ -366,14 +396,24 @@ ul#Users {
         border-top: 1px solid #ccc;
         border-right: 1px solid #ccc;
         border-bottom: 1px solid #ccc;
+        border-radius: 0 !important;
 
         &:last-child {
-            border-top-right-radius: 0.5em;
-            border-bottom-right-radius: 0.5em;
+            border-top-right-radius: 0.5em !important;
+            border-bottom-right-radius: 0.5em !important;
         }
     }
 }
 
 .container {
-    padding: 0.5em;
+    padding: 1em;
+    display: flex !important;
+    justify-content: center !important;
+
+    .card {
+        padding: 1em;
+        max-width: 600px;
+        width: 100% !important;
+        //text-align: left;
+    }
 }
