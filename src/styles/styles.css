@@ -1,6 +1,206 @@
+.rjm-bootstrap button a {
+  text-decoration: none;
+  color: #000;
+}
+.rjm-bootstrap button.btn {
+  outline: 0;
+  border: 0;
+}
+.rjm-bootstrap button.btn.wide {
+  width: 100%;
+}
+ul.contacts {
+  list-style: none;
+  text-align: left;
+  padding: 0;
+}
+ul.contacts li {
+  border: 1px solid #ddd;
+  padding: 0.5em;
+  cursor: pointer;
+  line-height: 1;
+  display: flex;
+  column-gap: 0.5em;
+}
+ul.contacts li.loading-contact span {
+  display: grid;
+  row-gap: 0.5em;
+  width: 100%;
+}
+ul.contacts li.loading-contact span strong,
+ul.contacts li.loading-contact span small {
+  position: relative;
+  background-color: #e0e5ea;
+  overflow: hidden;
+}
+ul.contacts li.loading-contact span strong:after,
+ul.contacts li.loading-contact span small:after {
+  content: '';
+  top: 0;
+  transform: translateX(100%);
+  width: 100%;
+  height: 100%;
+  position: absolute;
+  z-index: 1;
+  background: -moz-linear-gradient(left, #e0e5ea 33%, rgba(255, 255, 255, 0.3) 50%, #e0e5ea 99%, #e0e5ea);
+  /* FF3.6+ */
+  background: -webkit-linear-gradient(left, #e0e5ea 33%, rgba(255, 255, 255, 0.3) 50%, #e0e5ea 66%, #e0e5ea);
+  /* Chrome10+,Safari5.1+ */
+  background: -o-linear-gradient(left, #e0e5ea 33%, rgba(255, 255, 255, 0.3) 50%, #e0e5ea 66%, #e0e5ea);
+  /* Opera 11.10+ */
+  background: -ms-linear-gradient(left, #e0e5ea 33%, rgba(255, 255, 255, 0.3) 50%, #e0e5ea 66%, #e0e5ea);
+  /* IE10+ */
+  background: linear-gradient(to right, #e0e5ea 33%, rgba(255, 255, 255, 0.3) 50%, #e0e5ea 66%, #e0e5ea);
+  /* W3C */
+  animation: shine 2s infinite 3s;
+  -moz-animation: shine 2s infinite 3s;
+  -webkit-animation: shine 2s infinite 3s;
+  -o-animation: shine 2s infinite 3s;
+}
+ul.contacts li.loading-contact span strong {
+  width: 80%;
+}
+ul.contacts li.loading-contact span small {
+  width: 50%;
+}
+ul.contacts li.active,
+ul.contacts li:hover {
+  background-color: #eee;
+}
+ul.contacts li a {
+  text-decoration: none;
+  color: #444;
+}
+ul.contacts li button {
+  right: 0;
+}
+ul.contacts li span {
+  display: grid;
+}
+ul.contacts li h6 {
+  max-width: 10em;
+  /* white-space: nowrap; */
+  overflow: hidden;
+  text-overflow: ellipsis;
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  line-clamp: 2;
+  -webkit-box-orient: vertical;
+  line-height: 1.3;
+}
+.menu {
+  width: 100%;
+  margin: 0;
+  padding: 0;
+  position: absolute;
+  z-index: 1;
+  background-color: #fff;
+}
+.menu .backdrop {
+  height: 100vh;
+  width: 100%;
+  z-index: -1;
+  position: fixed;
+  background-color: rgba(0, 0, 0, 0.29);
+}
+.menu .menu-links {
+  padding: 0.5em 1em;
+  border-bottom: 1px solid rgba(0, 0, 0, 0.125);
+  background-color: #fff;
+}
+.menu .menu-links .link {
+  display: inline-flex;
+  justify-content: space-between;
+  text-decoration: none;
+  color: #000;
+  width: 100%;
+}
+nav.appbar {
+  align-items: center;
+  width: 100%;
+  left: 0;
+  z-index: 2;
+  max-height: 54px;
+  display: flex;
+  column-gap: 0.5em;
+  position: sticky;
+  top: 0;
+  background-color: #198754;
+  padding-top: 0.5rem;
+  padding-bottom: 0.5rem;
+}
+nav.appbar h1,
+nav.appbar h2,
+nav.appbar h3,
+nav.appbar h4,
+nav.appbar h5,
+nav.appbar h6 {
+  padding: 0;
+  line-height: 0;
+}
+nav.appbar h1,
+nav.appbar h2,
+nav.appbar h3,
+nav.appbar h4,
+nav.appbar h5,
+nav.appbar h6,
+nav.appbar a.link {
+  color: #fff !important;
+}
+ul {
+  margin: 0 !important;
+}
+ul.nav {
+  list-style: none;
+  float: left;
+}
+ul.nav li {
+  padding: 0 0.5em;
+}
+ul.nav li a {
+  color: #ccc;
+  text-decoration: none;
+}
+ul.nav li a.active,
+ul.nav li a:hover {
+  color: #fff !important;
+}
+nav .dropdown-toggle::after {
+  margin-top: 0.6em;
+}
+nav .container {
+  padding: 0 !important;
+}
+.dropdown-menu.show {
+  right: 0 !important;
+  left: unset;
+}
 #root {
   display: list-item;
   height: 100vh;
+}
+#root h1,
+#root h2,
+#root h3,
+#root h4,
+#root h5,
+#root h6 {
+  margin: 0;
+}
+.alert {
+  margin-bottom: 0.5em !important;
+}
+.mb-dot5 {
+  margin-bottom: 0.5em !important;
+}
+.mb-1 {
+  margin-bottom: 1em !important;
+}
+.mb-2 {
+  margin-bottom: 2em !important;
+}
+.mb-4 {
+  margin-bottom: 4em !important;
 }
 #Login .login-provider {
   width: 100% !important;
@@ -36,63 +236,16 @@
 #MobileMenu a {
   color: #000;
 }
-nav.navbar {
-  width: 100vw;
-  left: 0;
-  z-index: 2;
-  max-height: 54px;
-}
-ul.nav {
-  list-style: none;
-  float: left;
-}
-ul.nav li {
-  padding: 0 0.5em;
-}
-ul.nav li a {
-  color: #ccc;
-  text-decoration: none;
-}
-ul.nav li a.active,
-ul.nav li a:hover {
-  color: #fff !important;
-}
-nav .dropdown-toggle::after {
-  margin-top: 0.6em;
-}
-ul#Contacts,
-ul#Users {
-  list-style: none;
-  text-align: left;
-  padding: 0;
-}
-ul#Contacts li,
-ul#Users li {
-  border: 1px solid #ddd;
-  padding: 0.5em;
-  cursor: pointer;
-  line-height: 1;
-  display: flex;
-  column-gap: 0.5em;
-}
-ul#Contacts li.active,
-ul#Users li.active,
-ul#Contacts li:hover,
-ul#Users li:hover {
-  background-color: #eee;
-}
-ul#Contacts li a,
-ul#Users li a {
-  text-decoration: none;
-  color: #444;
-}
-ul#Contacts li button,
-ul#Users li button {
-  right: 0;
-}
-ul#Contacts li span,
-ul#Users li span {
-  display: grid;
+@keyframes shine {
+  /*100% {
+      background-position: left; it's the default value, no need to define it
+    }*/
+  0% {
+    transform: translateX(-100%);
+  }
+  100% {
+    transform: translateX(100%);
+  }
 }
 .user-icon {
   position: relative;
@@ -218,7 +371,7 @@ ul#Users li {
 #Conversations table tr td p.sent {
   float: right;
   color: #fff;
-  background-color: #198754;
+  background-color: #949a9f;
 }
 #Conversations table tr td p small {
   font-size: 0.7em !important;
@@ -289,25 +442,6 @@ ul#Users li {
   border-top-right-radius: 0.5em;
   border-bottom-right-radius: 0.5em;
 }
-.menu {
-  width: 100%;
-  display: list-item;
-  margin: 0;
-  padding: 0;
-  height: 100vh;
-  position: absolute;
-  z-index: 2;
-  background-color: #fff;
-  top: 0;
-}
-.menu .menu-links {
-  padding: 0.5em 1em;
-  border-bottom: 1px solid rgba(0, 0, 0, 0.125);
-}
-.menu .menu-links .link {
-  display: inline-flex;
-  justify-content: space-between;
-  text-decoration: none;
-  color: #000;
-  width: 100%;
+.container {
+  padding: 0.5em;
 }

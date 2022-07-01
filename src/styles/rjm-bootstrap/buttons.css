@@ -1,0 +1,11 @@
+.rjm-bootstrap button a {
+  text-decoration: none;
+  color: #000;
+}
+.rjm-bootstrap button.btn {
+  outline: 0;
+  border: 0;
+}
+.rjm-bootstrap button.btn.wide {
+  width: 100%;
+}

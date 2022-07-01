@@ -1,9 +1,37 @@
-@import 'variables.less';
+@import './rjm-bootstrap/buttons.less';
+@import './rjm-bootstrap/contacts.less';
+@import './rjm-bootstrap/menu.less';
+@import './rjm-bootstrap/navigation.less';
+@import './rjm-bootstrap/variables.less';
 
 #root {
     display: list-item;
     height: 100vh;
     //overflow: hidden;
+
+    h1, h2, h3, h4, h5, h6 {
+        margin: 0;
+    }
+}
+
+.alert {
+    .mb-dot5;
+}
+
+.mb-dot5 {
+    margin-bottom: 0.5em !important;
+}
+
+.mb-1 {
+    margin-bottom: 1em !important;
+}
+
+.mb-2 {
+    margin-bottom: 2em !important;
+}
+
+.mb-4 {
+    margin-bottom: 4em !important;
 }
 
 #Login {
@@ -50,98 +78,16 @@
     }
 }
 
-nav.navbar {
-    //position: fixed;
-    width: 100vw;
-    //top: 0;
-    left: 0;
-    z-index: 2;
-    max-height: 54px;
-}
-
-ul.nav {
-    list-style: none;
-    float: left;
-
-    li {
-        padding: 0 0.5em;
-
-        a {
-            color: #ccc;
-            text-decoration: none;
-
-            &.active, &:hover {
-                color: #fff !important;
-            }
-        }
-    }
-}
-
-nav {
-    .dropdown-toggle::after {
-        margin-top: 0.6em;
-    }
-}
-
-ul#Contacts, ul#Users {
-    list-style: none;
-    text-align: left;
-    padding: 0;
-
-    li {
-        border: 1px solid #ddd;
-        padding: 0.5em;
-        cursor: pointer;
-        line-height: 1;
-        display: flex;
-        column-gap: 0.5em;
-
-        // &::before {
-        //     content: "•";
-        //     color: @bs-success;
-        //     display: inline-block;
-        // }
-
-        // img.rounded-circle {
-        //     position: relative;
-        //     z-index: : 0;
-
-        //     &:before {
-        //         // position: absolute;  
-        //         // top: 8px;  
-        //         // margin: 8px 0 0 -12px;    
-        //         // vertical-align: middle;
-        //         // display: inline-block;
-        //         // width: 4px;
-        //         // height: 4px;
-        //         // background: #ccc;
-        //         // content: "•";
-        //     content: "•";
-        //     color: red;
-        //     display: inline-block;
-        //     width: 5em;
-        //     margin-left: -1em;
-        //     z-index: 1
-        //     }
-        // }
-
-        &.active, &:hover {
-            background-color: #eee;
-        }
-
-        a {
-            text-decoration: none;
-            color: #444
-        }
-
-        button {
-            right: 0;
-        }
-
-        span {
-            display: grid;
-        }
-    }
+@keyframes shine {
+    // 0% {
+    //   background-position: right;    
+    // }
+    /*100% {
+      background-position: left; it's the default value, no need to define it
+    }*/
+    
+	0% {transform:translateX(-100%);}
+	100% {transform:translateX(100%);}
 }
 
 .user-icon {
@@ -324,7 +270,7 @@ ul#Users {
                     &.sent {
                         float: right;
                         color: #fff;
-                        background-color: @bs-success;
+                        background-color: @bs-theme-primary; //@bs-success;
                     }
 
                     small {
@@ -379,8 +325,10 @@ ul#Users {
     position: absolute;
     bottom: 0;background-color: #fff;
     column-gap: 0.5em;
-
     //bottom: 0; 
+
+    //border: 1px solid lime;
+
     a {
         font-size: 1.4em;
     }
@@ -426,31 +374,6 @@ ul#Users {
     }
 }
 
-.menu {
-    width: 100%;
-    display: list-item;
-    margin: 0;
-    padding: 0;
-    height: 100vh;
-    position: absolute;
-    z-index: 2;
-    background-color: #fff;
-    top: 0;
-
-    .menu-links {
-        padding: 0.5em 1em;
-        border-bottom: 1px solid rgba(0,0,0,.125);
-
-        // &:first-child {
-        //     text-align: right;
-        // }
-
-        .link {
-            display: inline-flex;
-            justify-content: space-between;
-            text-decoration: none;
-            color: #000;
-            width: 100%;
-        }
-    }
+.container {
+    padding: 0.5em;
 }

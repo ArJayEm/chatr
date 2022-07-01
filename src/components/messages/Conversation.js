@@ -1,17 +1,13 @@
 import { useEffect, useRef, useState } from "react";
 import { Alert, Button, Form, Image } from "react-bootstrap";
-import { useParams, Link } from "react-router-dom";
-import { auth, firestore } from "../firebase";
-//eslint-disable-next-line
-import NavigationBar from "./NavigationBar";
-
-//import { useAuthState } from "react-firebase-hooks/auth";
-import { useCollectionData } from "react-firebase-hooks/firestore";
-//import { format } from "date-fns";
-
-import defaultUser from "../images/default_user.jpg";
-import MessageBubble from "./MessageBubble";
 import * as Icon from "react-bootstrap-icons";
+import { useCollectionData } from "react-firebase-hooks/firestore";
+import { Link, useParams } from "react-router-dom";
+
+import { auth, firestore } from "../../firebase";
+import defaultUserImage from "../../images/default_user.jpg";
+import MessageBubble from "./MessageBubble";
+
 
 export default function Conversation() {
   const [error, setError] = useState("");
@@ -23,7 +19,7 @@ export default function Conversation() {
   let { uid: contactId } = useParams();
   const [contact, setContact] = useState();
   const [unseenMessage, setUnseenMessage] = useState("");
-  const messageRef = useRef();
+  const messageRef = useRef(null);
   const scrollRef = useRef(null);
   const [hasUnseen, setHasUnseen] = useState(false);
   const [withScroll, setWithScroll] = useState(false);
@@ -31,6 +27,9 @@ export default function Conversation() {
   let from = auth.currentUser.uid + " - " + contactId;
   let to = contactId + " - " + auth.currentUser.uid;
   let senders = [from, to];
+  const [showSendButton, setShowSendButton] = useState(false);
+  const onKeyUp = () => setShowSendButton(messageRef.current.value.length > 0);
+  //const onBlur = () => setShowSendButton(false);
 
   let messagesCollection = firestore
     .collection("messages")
@@ -73,6 +72,7 @@ export default function Conversation() {
   useEffect(
     () => {
       getContact();
+      //setConversationsHeight();
     },
     //eslint-disable-next-line
     []
@@ -131,30 +131,36 @@ export default function Conversation() {
     setError("");
     setSending(true);
 
-    await firestore
-      .collection("messages")
-      .add({
-        createdDate: new Date(Date.now()),
-        message: messageRef.current.value,
-        to: contactId,
-        from: auth.currentUser.uid,
-        senders: from,
-        status: 0,
-      })
-      .then(() => {
-        messageRef.current.value = "";
-      })
-      .catch((e) => {
-        setSending(false);
-        console.error(e);
-        return setError("Message not sent.");
-      });
+    if (messageRef.current.value.length > 0) {
+      await firestore
+        .collection("messages")
+        .add({
+          createdDate: new Date(Date.now()),
+          message: messageRef.current.value,
+          to: contactId,
+          from: auth.currentUser.uid,
+          senders: from,
+          status: 0,
+        })
+        .then(() => {
+          messageRef.current.value = "";
+          setShowSendButton(false);
+        })
+        .catch((e) => {
+          setSending(false);
+          console.error(e);
+          return setError("Message not sent.");
+        });
 
-    if (!withScroll) {
-      setConversationsHeight();
+      if (!withScroll) {
+        setConversationsHeight();
+      }
+      if (!withScroll) {
+        seenNewMessages();
+      }
+      scrollToBottom();
+      setSending(false);
     }
-    scrollToBottom();
-    setSending(false);
   }
 
   function scrollToBottom() {
@@ -237,7 +243,7 @@ export default function Conversation() {
           <Image
             roundedCircle
             onError={() => handleOnError}
-            src={(contact && contact.providerData.photoURL) || defaultUser}
+            src={(contact && contact.providerData.photoURL) || defaultUserImage}
             alt=""
             style={{ width: "2em" }}
           />
@@ -325,7 +331,7 @@ export default function Conversation() {
       <div
         id="NewMessages"
         // style={{ display: hasUnseen && withScroll ? "" : "none" }}
-        className={hasUnseen ? "shown" : ""}
+        className={hasUnseen && withScroll ? "shown" : ""}
       >
         <button type="button" onClick={scrollToBottom}>
           {/* <small>
@@ -344,10 +350,19 @@ export default function Conversation() {
           <Form.Control
             type="text"
             ref={messageRef}
-            placeholder="Reply..."
-            required
+            onKeyUp={onKeyUp}
+            onFocus={onKeyUp}
+            onBlur={onKeyUp}
+            autoComplete="off"
+            placeholder="Type message..."
+            // required
           />
-          <Button variant="success" disabled={sending} type="submit">
+          <Button
+            variant="success"
+            disabled={sending}
+            type="submit"
+            style={{ display: showSendButton ? "block" : "none" }}
+          >
             <Icon.Send />
           </Button>
         </div>
@@ -357,7 +372,7 @@ export default function Conversation() {
 }
 
 <script type="text/javascript">
-  let height = document.getElementsByClassName('contact')[0].offsetHeight +
+  {/* let height = document.getElementsByClassName('contact')[0].offsetHeight +
   document.getElementsByClassName('navbar')[0].offsetHeight;
-  document.getElementsByClassName('page')[0].
+  document.getElementsByClassName('page')[0]. */}
 </script>;

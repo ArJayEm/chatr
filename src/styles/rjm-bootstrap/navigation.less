@@ -1,0 +1,62 @@
+@import '../rjm-bootstrap/variables.less';
+
+nav.appbar {
+    align-items: center;
+    width: 100%;
+    left: 0;
+    z-index: 2;
+    max-height: 54px;
+    display: flex;
+    column-gap: 0.5em;
+    position: sticky;
+    top: 0;
+    background-color: @bs-success;
+    padding-top: .5rem;
+    padding-bottom: .5rem;
+
+    h1, h2, h3, h4, h5, h6 {
+        padding: 0;
+        line-height: 0;
+    }
+
+    h1, h2, h3, h4, h5, h6, a.link {
+        color: #fff !important;
+    }
+}
+
+ul {
+    margin: 0 !important;
+}
+
+ul.nav {
+    list-style: none;
+    float: left;
+
+    li {
+        padding: 0 0.5em;
+
+        a {
+            color: #ccc;
+            text-decoration: none;
+
+            &.active, &:hover {
+                color: #fff !important;
+            }
+        }
+    }
+}
+
+nav {
+    .dropdown-toggle::after {
+        margin-top: 0.6em;
+    }
+
+    .container {
+        padding: 0 !important
+    }
+}
+
+.dropdown-menu.show {
+    right: 0 !important;
+    left: unset;
+}

@@ -1,37 +1,37 @@
+import { useEffect, useState } from "react";
 import { Container, Dropdown, Image, Navbar } from "react-bootstrap";
-import { Link, useNavigate } from "react-router-dom";
-//import { useAuthState } from "react-firebase-hooks/auth";
-import { useAuth } from "../context/AuthContext";
-import myIconInverted from "../images/chatr_icon_inverted.png";
-//import myIcon from "../images/chatr_icon.png";
-import { useState } from "react";
 import * as Icon from "react-bootstrap-icons";
-import { auth, firestore } from "../firebase";
-import defaultUser from "../images/default_user.jpg";
 import {
   BrowserView,
   isBrowser,
   isMobile,
   MobileView,
 } from "react-device-detect";
+import { Link, useNavigate } from "react-router-dom";
+
+import { auth, firestore } from "../../firebase";
+import myIconInverted from "../../images/chatr_icon_inverted.png";
+import defaultUserImage from "../../images/default_user.jpg";
+import { useAuth } from "../context/AuthContext";
 
 export default function NavigationBar() {
-  //const handleClose = () => setShow(false);
-  //const handleShow = () => setShow(true);
   const { currentUser } = useAuth();
-  //no-unused-vars
   const { logout } = useAuth();
   const history = useNavigate();
-  //const [error, setError] = useState("");
-  //const [loading, setLoading] = useState(false);
   const displayName =
     currentUser && (currentUser.displayName ?? currentUser.email);
   const [showMobileMenu, setShowMobileMenu] = useState(false);
 
+  useEffect(() => {
+    //get navigation height
+    const navbarHeight =
+      document.getElementsByClassName("navbar")[0].offsetHeight;
+    //set menu top offset
+    document.getElementsByClassName("menu")[0].style.top = navbarHeight;
+  }, []);
+
   async function handleLogout() {
     try {
-      //setLoading(true);
-      //if (auth.currentUser.uid != null) {
       var doc = firestore.collection("users").doc(auth.currentUser.uid);
       await doc
         .update({
@@ -43,7 +43,6 @@ export default function NavigationBar() {
         .finally(() => {
           history("/login");
         });
-      //}
     } catch (e) {
       //setLoading(false);
       console.error(e.message);
@@ -75,6 +74,7 @@ export default function NavigationBar() {
                   height="30"
                   className="d-inline-block align-top"
                 />
+                {/* <Icon.ChatSquareFill /> */}
               </Link>
             </li>
           </ul>
@@ -90,7 +90,9 @@ export default function NavigationBar() {
                   <Image
                     roundedCircle
                     onError={() => handleOnError}
-                    src={(currentUser && currentUser.photoURL) || defaultUser}
+                    src={
+                      (currentUser && currentUser.photoURL) || defaultUserImage
+                    }
                     alt="photoURL"
                     style={{ width: "1.5em" }}
                   />{" "}
@@ -113,7 +115,17 @@ export default function NavigationBar() {
           )}
           {isMobile && (
             <MobileView>
-              <Icon.List onClick={handleOnOpen} style={{ color: "#fff" }} />
+              {showMobileMenu ? (
+                <Icon.XLg
+                  onClick={handleOnClose}
+                  style={{ color: "#fff", fontSize: "1.5em" }}
+                />
+              ) : (
+                <Icon.List
+                  onClick={handleOnOpen}
+                  style={{ color: "#fff", fontSize: "1.5em" }}
+                />
+              )}
             </MobileView>
           )}
         </Container>
@@ -122,12 +134,7 @@ export default function NavigationBar() {
         className="menu"
         style={{ display: showMobileMenu ? "list-item" : "none" }}
       >
-        <div className="menu-links">
-          <div className="link">
-            <span>&nbsp;</span>
-            <Icon.XLg onClick={handleOnClose} />
-          </div>
-        </div>
+        <div className="backdrop"></div>
         <div className="menu-links">
           <a className="link" href="/update-profile">
             <span>

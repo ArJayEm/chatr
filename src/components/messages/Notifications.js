@@ -1,7 +1,8 @@
 import React from "react";
 import { Link } from "react-router-dom";
 import { Card, Container } from "react-bootstrap";
-import NavigationBar from "./NavigationBar";
+
+import NavigationBar from "../app/NavigationBar";
 
 export default function Notifications() {
   return (

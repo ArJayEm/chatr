@@ -1,17 +1,25 @@
 import React from "react";
-import SignUp from "./SignUp";
+import {
+  BrowserRouter as Router,
+  Routes,
+  Route,
+  //HashRouter,
+} from "react-router-dom";
+
+import "../../styles/styles.css";
+
+import Dashboard from "../app/Dashboard";
+import PrivateRoute from "../app/PrivateRoute";
+import Conversation from "../messages/Conversation";
+import Contacts from "../contacts/Contacts";
+import AddContact from "../contacts/AddContact";
+import Notifications from "../messages/Notifications";
 import { AuthProvider } from "../context/AuthContext";
-import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
-import Dashboard from "./Dashboard";
-import Login from "./Login";
-import PrivateRoute from "./PrivateRoute";
-import ForgotPassword from "./ForgotPassword";
-import UpdateProfile from "./UpdateProfile";
-import Notifications from "./Notifications";
-import Contacts from "./Contacts";
-import Conversation from "./Conversation";
-import "../styles/styles.css";
-import AddContact from "./AddContact";
+import ForgotPassword from "../user/ForgotPassword";
+import Login from "../user/Login";
+import SignUp from "../user/SignUp";
+import UpdateProfile from "../user/UpdateProfile";
+import NotFound from "./NotFound";
 
 function App() {
   return (
@@ -32,6 +40,7 @@ function App() {
             <Route exact path="/contacts" element={<Contacts />} />
             <Route exact path="/addcontact" element={<AddContact />} />
             <Route path="/conversation/:uid" element={<Conversation />} />
+            <Route component={NotFound} />
           </Routes>
         </AuthProvider>
       </Router>

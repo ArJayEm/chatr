@@ -1,15 +1,13 @@
-import React, { useRef, useState } from "react";
-import { Container, Form, Button, Card, Alert } from "react-bootstrap";
-import { useAuth } from "../context/AuthContext";
-import { Link, useNavigate } from "react-router-dom";
-//import socialMediaAuth from "../context/AuthSocialMedia";
-import {
-  auth,
-  googleProvider,
-  facebookProvider,
-  githubProvider,
-} from "../firebase";
+import { useRef, useState } from "react";
+import { Alert, Button, Card, Container, Form } from "react-bootstrap";
 import * as Icon from "react-bootstrap-icons";
+import { Link, useNavigate } from "react-router-dom";
+
+import {
+  auth, facebookProvider,
+  githubProvider, googleProvider
+} from "../../firebase";
+import { useAuth } from "../context/AuthContext";
 
 export default function Continue() {
   const emailRef = useRef();

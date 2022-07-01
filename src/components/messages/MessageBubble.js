@@ -1,6 +1,6 @@
 import { format } from "date-fns";
-import { auth } from "../firebase";
-//import * as Icon from "react-bootstrap-icons";
+
+import { auth } from "../../firebase";
 
 export default function MessageBubble({
   index,
@@ -25,14 +25,6 @@ export default function MessageBubble({
       message.createdDate.nanoseconds / 1000000
   ); //.setUTCSeconds(d);
   let now = new Date(Date.now());
-
-  // if (index === 5) {
-  //   const fireBaseTime = date.toDateString();
-  //   const atTime = date.toLocaleTimeString();
-
-  //   console.log(fireBaseTime, atTime);
-  //   console.log(d.toDate());
-  // }
 
   let dateFormat = "";
   let timeFormat = "h:mm a";
@@ -167,7 +159,7 @@ export default function MessageBubble({
           <>
             {index !== 0 && (
               <tr>
-                <td>&nbsp;</td>
+                <td style={{ lineHeight: "0.5" }}>&nbsp;</td>
               </tr>
             )}
             <tr>
@@ -193,7 +185,7 @@ export default function MessageBubble({
         {index === len - 1 && isFromUser && (
           <tr className="status">
             <td>
-              <small>{isStatusSent ? "Sent" : "Seen"}</small>
+              <small>{isStatusSent ? "Delivered" : "Seen"}</small>
               {/* <Icon.Check className={isStatusSentClass} /> */}
             </td>
           </tr>

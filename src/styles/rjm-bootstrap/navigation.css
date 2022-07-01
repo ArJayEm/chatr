@@ -1,0 +1,60 @@
+nav.appbar {
+  align-items: center;
+  width: 100%;
+  left: 0;
+  z-index: 2;
+  max-height: 54px;
+  display: flex;
+  column-gap: 0.5em;
+  position: sticky;
+  top: 0;
+  background-color: #198754;
+  padding-top: 0.5rem;
+  padding-bottom: 0.5rem;
+}
+nav.appbar h1,
+nav.appbar h2,
+nav.appbar h3,
+nav.appbar h4,
+nav.appbar h5,
+nav.appbar h6 {
+  padding: 0;
+  line-height: 0;
+}
+nav.appbar h1,
+nav.appbar h2,
+nav.appbar h3,
+nav.appbar h4,
+nav.appbar h5,
+nav.appbar h6,
+nav.appbar a.link {
+  color: #fff !important;
+}
+ul {
+  margin: 0 !important;
+}
+ul.nav {
+  list-style: none;
+  float: left;
+}
+ul.nav li {
+  padding: 0 0.5em;
+}
+ul.nav li a {
+  color: #ccc;
+  text-decoration: none;
+}
+ul.nav li a.active,
+ul.nav li a:hover {
+  color: #fff !important;
+}
+nav .dropdown-toggle::after {
+  margin-top: 0.6em;
+}
+nav .container {
+  padding: 0 !important;
+}
+.dropdown-menu.show {
+  right: 0 !important;
+  left: unset;
+}

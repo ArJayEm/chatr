@@ -1,0 +1,27 @@
+.menu {
+  width: 100%;
+  margin: 0;
+  padding: 0;
+  position: absolute;
+  z-index: 1;
+  background-color: #fff;
+}
+.menu .backdrop {
+  height: 100vh;
+  width: 100%;
+  z-index: -1;
+  position: fixed;
+  background-color: rgba(0, 0, 0, 0.29);
+}
+.menu .menu-links {
+  padding: 0.5em 1em;
+  border-bottom: 1px solid rgba(0, 0, 0, 0.125);
+  background-color: #fff;
+}
+.menu .menu-links .link {
+  display: inline-flex;
+  justify-content: space-between;
+  text-decoration: none;
+  color: #000;
+  width: 100%;
+}
