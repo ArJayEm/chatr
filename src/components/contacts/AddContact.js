@@ -151,8 +151,8 @@ export default function AddContact() {
                     }
 
                     if (!!error) {
-                      //console.info(error);
-                      setHasCameraError(!!error);
+                      console.info(error);
+                      //setHasCameraError(!!error);
                     }
                   }}
                   style={{ width: "100%" }}
