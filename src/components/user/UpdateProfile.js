@@ -6,6 +6,7 @@ import { auth, firestore } from "../../firebase";
 import defaultUserImage from "../../images/default_user.jpg";
 import AppBar from "../app/AppBar";
 import { useAuth } from "../context/AuthContext";
+import Toast from "../app/Toast";
 
 export default function UpdateProfile() {
   const displayNameRef = useRef();
@@ -113,6 +114,7 @@ export default function UpdateProfile() {
           <div className="card">
             {message && <Alert variant="success">{message}</Alert>}
             {error && <Alert variant="danger">{error}</Alert>}
+            {error && <Toast />}
             {user && (
               <div className="w-100 text-center">
                 <div

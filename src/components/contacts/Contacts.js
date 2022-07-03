@@ -61,8 +61,8 @@ export default function Contacts() {
     .then((snapshot) => {
       if (snapshot.exists) {
         //setUser(snapshot.data());
-
-        //if (snapshot.data().isLoggedIn) {
+        if (snapshot.data().contacts) {
+          //if (snapshot.data().isLoggedIn) {
           let userContacts = snapshot.data().contacts.map((e) => e.uid) ?? [];
           //console.log(userContacts.length);
           if (userContacts.length > 0) {
@@ -74,11 +74,16 @@ export default function Contacts() {
               .then((snapshots) => {
                 setContacts(snapshots.docs.map((e) => e.data()));
                 setLoading(false);
+              })
+              .finally(() => {})
+              .catch((e) => {
+                catchError(e, "get-contacs-error.");
               });
           }
-        // } else {
-        //   //history("/login");
-        // }
+          // } else {
+          //   //history("/login");
+          // }
+        }
       }
       setLoading(false);
     })
