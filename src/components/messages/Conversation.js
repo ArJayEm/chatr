@@ -1,3 +1,4 @@
+/* eslint-disable no-unused-vars */
 import { useEffect, useRef, useState } from "react";
 import { Alert, Button, Form } from "react-bootstrap";
 import * as Icon from "react-bootstrap-icons";
@@ -9,6 +10,7 @@ import defaultUserImage from "../../images/default_user.jpg";
 import AppBar from "../app/AppBar";
 import MessageBubble from "./MessageBubble";
 import Loading from "../app/Loading";
+import Contact from "../contacts/Contact";
 
 export default function Conversation() {
   const [error, setError] = useState("");
@@ -58,7 +60,7 @@ export default function Conversation() {
       setUnseenMessage(latestUnseenMessage);
     }
     //}
-    setConversationsHeight();
+    //setConversationsHeight();
   });
 
   let conversationFilter = messagesCollection;
@@ -67,7 +69,6 @@ export default function Conversation() {
   let usersCollection = firestore.collection("users");
   usersCollection
     .doc(contactId)
-    //.where("uid", "==", contactId)
     .get()
     .then((snapshot) => {
       //load();
@@ -164,7 +165,7 @@ export default function Conversation() {
           return setError("Message not sent.");
         });
 
-      if (withScroll) {
+      if (!withScroll) {
         setConversationsHeight();
       }
       if (!withScroll) {
@@ -232,37 +233,41 @@ export default function Conversation() {
 
   return !loading ? (
     <div className="page">
-      <AppBar
-        component={
-          <div
-            className={
-              "contact contact_small logged-" +
-              (contact && contact.isLoggedIn ? "in" : "out")
-            }
-          >
-            <div className="user">
-              <img
-                className="rounded-circle"
-                onError={() => handleOnError}
-                src={
-                  contact && (contact.providerData.photoURL || defaultUserImage)
-                }
-                alt={contact && contact.displayName}
-              />
-              <span className="dot indicator">●</span>
+      {contact && (
+        <AppBar history="/"
+          component={
+            // <Contact contact={contact} handleOnError={handleOnError} />
+            <div
+              className={
+                "contact contact_small logged-" +
+                (contact && contact.isLoggedIn ? "in" : "out")
+              }
+            >
+              <div className="user">
+                <img
+                  className="rounded-circle"
+                  onError={() => handleOnError}
+                  src={
+                    contact &&
+                    (contact.providerData.photoURL || defaultUserImage)
+                  }
+                  alt={contact && contact.displayName}
+                />
+                <span className="dot indicator">●</span>
+              </div>
+              <div className="content">
+                <strong className="title">
+                  {contact &&
+                    (contact.displayName || contact.providerData.displayName)}
+                </strong>
+                <span className="tag indicator">
+                  {contact && (contact.isLoggedIn ? "Online" : "Offline")}
+                </span>
+              </div>
             </div>
-            <div className="content">
-              <strong className="title">
-                {contact &&
-                  (contact.displayName || contact.providerData.displayName)}
-              </strong>
-              <span className="tag indicator">
-                {contact && (contact.isLoggedIn ? "Online" : "Offline")}
-              </span>
-            </div>
-          </div>
-        }
-      />
+          }
+        />
+      )}
       <div
         id="Conversations"
         className="w-100 text-center"

@@ -1,5 +1,5 @@
 import { useEffect, useRef, useState } from "react";
-import { Alert, Button, Container, Form, Image } from "react-bootstrap";
+import { Alert, Button, Form, Image } from "react-bootstrap";
 import QRCode from "react-qr-code";
 
 import { auth, firestore } from "../../firebase";
@@ -106,9 +106,9 @@ export default function UpdateProfile() {
   }
 
   return (
-    <>
-      <AppBar title="Profile" />
-      <Container>
+    <div className="page">
+      <AppBar history="/" title="Profile" />
+      <div className="container">
         {!loading && (
           <div className="card">
             {message && <Alert variant="success">{message}</Alert>}
@@ -194,7 +194,7 @@ export default function UpdateProfile() {
             </Form>
           </div>
         )}
-      </Container>
-    </>
+      </div>
+    </div>
   );
 }

@@ -580,24 +580,23 @@ ul#Users li {
   border-top-right-radius: 0.5em !important;
   border-bottom-right-radius: 0.5em !important;
 }
-.container {
+.rjm-bootstrap .page .container {
+  height: 100vh !important;
   padding: 1em;
-  display: flex !important;
-  justify-content: center !important;
 }
-.container .card {
+.rjm-bootstrap .page .container .card {
   padding: 1em;
-  max-width: 600px;
   width: 100% !important;
+  border: 0;
 }
-.loading-page {
+.rjm-bootstrap .loading-page {
   display: grid;
   justify-content: center;
   align-items: center;
   text-align: center;
   height: 100vh;
 }
-.loading-page svg {
+.rjm-bootstrap .loading-page svg {
   font-size: 3em;
   animation: rotate 1.5s linear infinite;
 }

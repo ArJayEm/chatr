@@ -1,102 +1,106 @@
-/* eslint-disable no-unused-vars */
 import { useEffect, useRef, useState } from "react";
-import { Alert, Container, Form, Image } from "react-bootstrap";
+import { Alert, Form, Image } from "react-bootstrap";
 import * as Icon from "react-bootstrap-icons";
 import { Link, useNavigate } from "react-router-dom";
 
 import { auth, firestore } from "../../firebase";
 import defaultUserImage from "../../images/default_user.jpg";
+//eslint-disable-next-line
 
 export default function Contacts() {
   const [error, setError] = useState("");
   const [message, setMessage] = useState("");
   const [loading, setLoading] = useState(false);
-  const [user, setUser] = useState(null);
+  //const [user, setUser] = useState(null);
+  //const [userContacts, setUserContacts] = useState(null);
   const [contacts, setContacts] = useState(null);
   const history = useNavigate();
   const contactsRef = useRef("");
 
   let usersCollection = firestore.collection("users");
-  let userContacts = [];
-  // usersCollection
-  //   .doc(auth.currentUser.uid)
-  //   .get()
-  //   .then((snapshot) => {
-  //     setUser(snapshot.data());
-  //     userContacts = snapshot.data().contacts.map((e) => e.uid) ?? [];
-  //   });
-  // let contactsCollection =
-  //   userContacts.length > 0
-  //     ? usersCollection.where("uid", "in", userContacts)
-  //     : usersCollection;
-  // let [contacts] = useCollectionData(contactsCollection);
 
   useEffect(
     () => {
-      //if (auth.currentUser != null) {
-      getUser();
-      // } else {
-      //   history("/login");
-      // }
+      //getUser();
     },
     //eslint-disable-next-line
     []
   );
 
-  async function getUser() {
-    load();
-    var doc = usersCollection.doc(auth.currentUser.uid);
+  // async function getUser() {
+  //   load();
 
-    await doc
-      .get()
-      .then((snapshot) => {
-        if (snapshot.exists) {
-          setUser(snapshot.data());
+  //   await usersCollection
+  //     .doc(auth.currentUser.uid)
+  //     .get()
+  //     .then((snapshot) => {
+  //       if (snapshot.exists) {
+  //         //setUser(snapshot.data());
 
-          if (snapshot.data().isLoggedIn) {
-            let userContacts = snapshot.data().contacts.map((e) => e.uid) ?? [];
-            if (userContacts.length > 0) {
-              getContacts(userContacts);
-            }
-          } else {
-            //history("/login");
+  //         if (snapshot.data().isLoggedIn) {
+  //           let userContacts = snapshot.data().contacts.map((e) => e.uid) ?? [];
+  //           console.log(userContacts.length);
+  //           if (userContacts.length > 0) {
+  //             setUserContacts(userContacts);
+  //           }
+  //         } else {
+  //           history("/login");
+  //         }
+  //       }
+  //       setLoading(false);
+  //     })
+  //     .finally(() => {})
+  //     .catch((e) => {
+  //       catchError(e, "get-user-error.");
+  //     });
+  // }
+
+  usersCollection
+    .doc(auth.currentUser.uid)
+    .get()
+    .then((snapshot) => {
+      if (snapshot.exists) {
+        //setUser(snapshot.data());
+
+        //if (snapshot.data().isLoggedIn) {
+          let userContacts = snapshot.data().contacts.map((e) => e.uid) ?? [];
+          //console.log(userContacts.length);
+          if (userContacts.length > 0) {
+            //setUserContacts(userContacts);
+
+            usersCollection
+              .where("uid", "in", userContacts)
+              .get()
+              .then((snapshots) => {
+                setContacts(snapshots.docs.map((e) => e.data()));
+                setLoading(false);
+              });
           }
-        }
-        setLoading(false);
-      })
-      .finally(() => {})
-      .catch((e) => {
-        catchError(e, "get-user-error.");
-      });
-  }
-
-  async function getContacts(userContacts) {
-    load();
-
-    await usersCollection
-      .where("uid", "in", userContacts)
-      .get()
-      .then((snapshots) => {
-        setContacts(snapshots.docs.map((e) => e.data()));
-        setLoading(false);
-      })
-      .finally(() => {})
-      .catch((e) => {
-        catchError(e, "get-contacts-error.");
-      });
-  }
+        // } else {
+        //   //history("/login");
+        // }
+      }
+      setLoading(false);
+    })
+    .finally(() => {})
+    .catch((e) => {
+      catchError(e, "get-user-error.");
+    });
 
   function handleOnClick(uid) {
     history("/conversation/" + uid);
   }
 
-  function handleOnSearch() {
+  function handleOnSearch(e) {
+    e.preventDefault();
+
     if (contactsRef.current.value) {
     }
   }
 
   function handleOnError() {}
 
+  //eslint-disable-next-line
   function load() {
     setMessage("");
     setError("");
@@ -105,16 +109,17 @@ export default function Contacts() {
 
   function catchError(e, msg) {
     setLoading(false);
-    console.error(e.message);
+    var message = msg + " " + e.message;
+    console.error(message);
     return setError(msg);
   }
 
   return (
-    <>
-      <Container id="ContactsDiv">
-        <div className="card">
-          {error && <Alert variant="danger">{error}</Alert>}
-          {message && <Alert variant="success">{message}</Alert>}
+    <div className="page">
+      <div id="ContactsDiv" className="container">
+        {error && <Alert variant="danger">{error}</Alert>}
+        {message && <Alert variant="success">{message}</Alert>}
+        {contacts && (
           <Form
             id="SearchUserCode"
             className="form mb-dot5"
@@ -140,77 +145,91 @@ export default function Contacts() {
               <Icon.Plus />
             </Link>
           </Form>
-          <ul id="Contacts" className="contacts">
-            {loading ? (
-              <>
-                <li className="loading-contact">
-                  <div className="user-icon">
-                    <Image
-                      roundedCircle
-                      src={defaultUserImage}
-                      style={{ width: "3em" }}
+        )}
+        <ul id="Contacts" className="contacts">
+          {loading ? (
+            <>
+              <li className="loading-contact">
+                <div className="user-icon">
+                  <Image
+                    roundedCircle
+                    src={defaultUserImage}
+                    style={{ width: "3em" }}
+                  />
+                </div>
+                <span>
+                  <strong>&nbsp;</strong>
+                  <small>&nbsp;</small>
+                </span>
+              </li>
+              <li className="loading-contact">
+                <div className="user-icon">
+                  <Image
+                    roundedCircle
+                    src={defaultUserImage}
+                    style={{ width: "3em" }}
+                  />
+                </div>
+                <span>
+                  <strong>&nbsp;</strong>
+                  <small>&nbsp;</small>
+                </span>
+              </li>
+            </>
+          ) : contacts ? (
+            contacts &&
+            contacts.map((contact) => {
+              return (
+                <li
+                  key={contact.uid}
+                  id={contact.uid}
+                  onClick={() => handleOnClick(contact.uid)}
+                  className={
+                    "contact contact_small logged-" +
+                    (contact && contact.isLoggedIn ? "in" : "out")
+                  }
+                >
+                  {/* <Contact contact={contact} handleOnError={handleOnError} /> */}
+                  <div className="user">
+                    <img
+                      className="rounded-circle"
+                      onError={() => handleOnError}
+                      src={
+                        contact &&
+                        (contact.providerData.photoURL || defaultUserImage)
+                      }
+                      alt={contact && contact.displayName}
                     />
+                    <span className="dot indicator">●</span>
                   </div>
-                  <span>
-                    <strong>&nbsp;</strong>
-                    <small>&nbsp;</small>
-                  </span>
-                </li>
-                <li className="loading-contact">
-                  <div className="user-icon">
-                    <Image
-                      roundedCircle
-                      src={defaultUserImage}
-                      style={{ width: "3em" }}
-                    />
-                  </div>
-                  <span>
-                    <strong>&nbsp;</strong>
-                    <small>&nbsp;</small>
-                  </span>
-                </li>
-              </>
-            ) : contacts ? (
-              contacts.map((contact) => {
-                return (
-                  <li
-                    key={contact.uid}
-                    //className={i === 0 ? "active" : ""}
-                    id={contact.uid}
-                    onClick={() => handleOnClick(contact.uid)}
-                  >
-                    <div className="user-icon">
-                      <Image
-                        roundedCircle
-                        onError={() => handleOnError}
-                        src={
-                          (contact && contact.providerData.photoURL) ||
-                          defaultUserImage
-                        }
-                        alt=""
-                        style={{ width: "3em" }}
-                      />
-                      <span
-                        className={
-                          contact.isLoggedIn ? "logged-in" : "logged-out"
-                        }
-                      >
-                        ●
-                      </span>
-                    </div>
-                    <span>
-                      <strong>{contact.displayName}</strong>
-                      <small>{"{message.last}"}</small>
+                  <div className="content">
+                    <strong className="title">
+                      {contact &&
+                        (contact.displayName ||
+                          contact.providerData.displayName)}
+                    </strong>
+                    <span className="tag indicator">
+                      {/* {contact && (contact.isLoggedIn ? "Online" : "Offline")} */}
+                      {/* {messages.last} */}
                     </span>
-                  </li>
-                );
-              })
-            ) : (
-              <li>No Contacts yet T_T...</li>
-            )}
-          </ul>
-        </div>
-      </Container>
-    </>
+                  </div>
+                </li>
+              );
+            })
+          ) : (
+            <li>
+              <Link
+                className="btn wide btn-success"
+                variant="button"
+                to="/addcontact"
+                style={{ color: "#fff" }}
+              >
+                <Icon.Plus /> Add Contact
+              </Link>
+            </li>
+          )}
+        </ul>
+      </div>
+    </div>
   );
 }

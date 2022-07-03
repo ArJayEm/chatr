@@ -19,9 +19,9 @@ export default function AddContact() {
   const [user, setUser] = useState();
   const [data, setData] = useState(null);
   const [showScanner, setShowScanner] = useState(false);
-  //eslint-disable-next-line
   const [rotateCamera, setRotateCamera] = useState(false);
   const [hasCameraError, setHasCameraError] = useState(false);
+  //const [enableSearch, setEnableSearch] = useState(false);
 
   var usersRef = firestore.collection("users");
   var requestsRef = firestore
@@ -29,58 +29,62 @@ export default function AddContact() {
     .where("from", "==", currentUser.uid);
   let [requests] = useCollectionData(requestsRef);
 
-  async function handleOnSearch() {
-    load();
-    setContacts(null);
-    setHasCameraError(false);
+  async function handleOnSearch(e) {
+    e.preventDefault();
 
-    await firestore
-      .collection("users")
-      .doc(currentUser.uid)
-      .get()
-      .then((snapshot) => {
-        if (snapshot.exists) {
-          setUser(snapshot.data());
-        }
-      })
-      .catch((e) => {
-        catchError(e, "get-user-error.");
-      });
-
-    if (user.contacts && user.contacts.length > 0) {
-      var code = userCodeRef.current.value ?? data;
-      var contactsAndSelf = [
-        ...user.contacts.map((u) => u.uid),
-        currentUser.uid,
-      ];
+    if (userCodeRef.current.value.length === 12) {
+      load();
+      setContacts(null);
+      setHasCameraError(false);
 
       await firestore
         .collection("users")
-        //.where("uid", "!=", currentUser.uid);
-        .where("userCode", "==", code)
-        //.where("providerData.uid", "==", code)
-        .where("uid", "not-in", contactsAndSelf)
+        .doc(currentUser.uid)
         .get()
         .then((snapshot) => {
-          snapshot.docs.map((doc) => setContacts(doc.data()));
+          if (snapshot.exists) {
+            setUser(snapshot.data());
+          }
         })
         .catch((e) => {
-          catchError(e, "get-contacts-error.");
+          catchError(e, "get-user-error.");
         });
-    } else {
-      await usersRef
-        .where("userCode", "==", code)
-        //.where("providerData.uid", "==", code)
-        .where("uid", "!=", currentUser.uid)
-        .get()
-        .then((snapshot) => {
-          snapshot.docs.map((doc) => setContacts(doc.data()));
-        })
-        .catch((e) => {
-          catchError(e, "get-contacts-error.");
-        });
+
+      if (user.contacts && user.contacts.length > 0) {
+        var code = userCodeRef.current.value ?? data;
+        var contactsAndSelf = [
+          ...user.contacts.map((u) => u.uid),
+          currentUser.uid,
+        ];
+
+        await firestore
+          .collection("users")
+          //.where("uid", "!=", currentUser.uid);
+          .where("userCode", "==", code)
+          //.where("providerData.uid", "==", code)
+          .where("uid", "not-in", contactsAndSelf)
+          .get()
+          .then((snapshot) => {
+            snapshot.docs.map((doc) => setContacts(doc.data()));
+          })
+          .catch((e) => {
+            catchError(e, "get-contacts-error.");
+          });
+      } else {
+        await usersRef
+          .where("userCode", "==", code)
+          //.where("providerData.uid", "==", code)
+          .where("uid", "!=", currentUser.uid)
+          .get()
+          .then((snapshot) => {
+            snapshot.docs.map((doc) => setContacts(doc.data()));
+          })
+          .catch((e) => {
+            catchError(e, "get-contacts-error.");
+          });
+      }
+      setLoading(false);
     }
-    setLoading(false);
   }
 
   //eslint-disable-next-line
@@ -122,13 +126,14 @@ export default function AddContact() {
 
   function catchError(e, msg) {
     setLoading(false);
+    var message = msg + " " + e.message;
     console.error(e.message);
-    return setError(msg);
+    return setError(message);
   }
 
   return (
-    <>
-      <AppBar title="Contacts" />
+    <div className="page">
+      <AppBar history="/" title="Contacts" />
       <Container className="d-flex" style={{ minHeight: "100vh" }}>
         <div className="w-100">
           {error && <Alert variant="danger">{error}</Alert>}
@@ -152,8 +157,8 @@ export default function AddContact() {
                     }
 
                     if (!!error) {
-                      //console.info(error);
-                      setHasCameraError(!!error);
+                      console.info(error);
+                      setHasCameraError(error);
                     }
                   }}
                   style={{ width: "100%" }}
@@ -162,8 +167,8 @@ export default function AddContact() {
                 <button
                   type="button"
                   onClick={() => {
-                    console.log(!rotateCamera);
-                    //setRotateCamera(!rotateCamera);
+                    //console.log(!rotateCamera);
+                    setRotateCamera(!rotateCamera);
                   }}
                   className="btn wide"
                 >
@@ -172,19 +177,22 @@ export default function AddContact() {
               </section>
             )
           )}
-          <div className="form-group">
+          <form className="form-group" onSubmit={handleOnSearch}>
             <input
-              type="text"
-              //maxLength="12"
+              //type="number"
+              maxLength="12"
+              //max={12}
               className="form-control"
               placeholder="User Code..."
               ref={userCodeRef}
+              //onKeyUp={setEnableSearch(true)}
             />
             <button
-              type="button"
+              type="submit"
               title="Search"
               onError={() => handleOnError()}
-              onClick={() => handleOnSearch()}
+              //onClick={() => handleOnSearch()}
+              //disabled={enableSearch}
             >
               <Icon.Search />
             </button>
@@ -196,7 +204,7 @@ export default function AddContact() {
             >
               <Icon.QrCodeScan />
             </button>
-          </div>
+          </form>
           {/* <h2 className="text-center mb-4">Add Contact</h2> */}
           {!loading && contacts && (
             <div className="w-100 text-center">
@@ -241,6 +249,6 @@ export default function AddContact() {
           )}
         </div>
       </Container>
-    </>
+    </div>
   );
 }

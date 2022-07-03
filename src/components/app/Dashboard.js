@@ -21,25 +21,25 @@ export default function Dashboard() {
   const [user, setUser] = useState(null);
   const [axiosGeoLocation, setAxiosGeoLocation] = useState(null);
   const [navigatorGeoLocation, setNavigatorGeoLocation] = useState(null);
-  const { coords, isGeolocationAvailable, isGeolocationEnabled } =
-    useGeolocated({
-      positionOptions: {
-        enableHighAccuracy: false,
-      },
-      userDecisionTimeout: 5000,
-    });
+  // const { coords, isGeolocationAvailable, isGeolocationEnabled } =
+  //   useGeolocated({
+  //     positionOptions: {
+  //       enableHighAccuracy: false,
+  //     },
+  //     userDecisionTimeout: 5000,
+  //   });
 
   let usersCollection = firestore.collection("users");
 
   useEffect(
     () => {
-      if (auth.currentUser) {
-        getGeoLocationData();
-        saveUser();
-        setDashboardHeight();
-      } else {
-        history("/login");
-      }
+      //if (auth.currentUser != null) {
+      getGeoLocationData();
+      saveUser();
+      setDashboardHeight();
+      // } else {
+      //   history("/login");
+      // }
     },
     //eslint-disable-next-line
     []
@@ -57,32 +57,32 @@ export default function Dashboard() {
   const getGeoLocationData = async () => {
     //console.log(isGeolocationAvailable, isGeolocationEnabled, coords);
 
-    if (navigator.geolocation) {
-      var errorCode = null;
-      var errorMessage = null;
+    // if (navigator.geolocation) {
+    //   var errorCode = null;
+    //   var errorMessage = null;
 
-      //setNavigatorGeoLocation(navigator.geolocation);
+    //   //setNavigatorGeoLocation(navigator.geolocation);
 
-      navigator.geolocation.getCurrentPosition(
-        function (position) {
-          setNavigatorGeoLocation({
-            lat: position.coords.latitude,
-            long: position.coords.longitude,
-            coords: position.coords.latitude + "," + position.coords.longitude,
-          });
-        },
-        function (error) {
-          errorCode = error.code;
-          errorMessage = error.message;
-          console.error(
-            "Error getting navigator geo location. " +
-              errorCode +
-              " - " +
-              errorMessage
-          );
-        }
-      );
-    }
+    //   navigator.geolocation.getCurrentPosition(
+    //     function (position) {
+    //       setNavigatorGeoLocation({
+    //         lat: position.coords.latitude,
+    //         long: position.coords.longitude,
+    //         coords: position.coords.latitude + "," + position.coords.longitude,
+    //       });
+    //     },
+    //     function (error) {
+    //       errorCode = error.code;
+    //       errorMessage = error.message;
+    //       console.error(
+    //         "Error getting navigator geo location. " +
+    //           errorCode +
+    //           " - " +
+    //           errorMessage
+    //       );
+    //     }
+    //   );
+    // }
 
     const res = await axios.get("https://geolocation-db.com/json/");
     //console.log(res.data);
@@ -98,36 +98,28 @@ export default function Dashboard() {
 
     var doc = usersCollection.doc(auth.currentUser.uid);
     //console.log(auth.currentUser);
+    const data = {
+      //editedDate: auth.currentUser.metadata.lastSignInTime,
+      displayName: auth.currentUser.displayName ?? auth.currentUser.email,
+      lastLogIn: auth.currentUser.metadata.lastSignInTime,
+      providerData: auth.currentUser.providerData.map((e) => e)[0],
+      isLoggedIn: true,
+      axiosGeoLocation: axiosGeoLocation,
+      navigatorGeoLocation: navigatorGeoLocation,
+    };
+
     if ((await doc.get()).exists) {
-      await doc
-        .update({
-          //editedDate: auth.currentUser.metadata.lastSignInTime,
-          displayName: auth.currentUser.displayName ?? auth.currentUser.email,
-          lastLogIn: auth.currentUser.metadata.lastSignInTime,
-          providerData: auth.currentUser.providerData.map((e) => e)[0],
-          isLoggedIn: true,
-          //userCode: generateUserCode(),
-          //config: auth.currentUser.auth.currentUser.auth.config,
-          axiosGeoLocation: axiosGeoLocation,
-          navigatorGeoLocation: navigatorGeoLocation,
-        })
-        .catch((e) => {
-          catchError(e, "update-user-error.");
-        });
+      await doc.update(data).catch((e) => {
+        catchError(e, "update-user-error.");
+      });
     } else {
       await doc
         .set({
-          displayName: auth.currentUser.displayName ?? auth.currentUser.email,
           uid: auth.currentUser.uid,
           createdDate: auth.currentUser.metadata.createdDate ?? Date.now(),
-          lastLogIn: auth.currentUser.metadata.lastSignInTime ?? Date.now(),
-          providerData: auth.currentUser.providerData.map((e) => e)[0],
           userCode: generateUserCode(),
-          userContacts: [],
-          isLoggedIn: true,
-          //config: auth.currentUser.auth.currentUser.auth.config,
-          geoLocation: axiosGeoLocation,
-          navigatorGeoLocation: navigatorGeoLocation,
+          contacts: [],
+          data,
         })
         .catch((e) => {
           catchError(e, "set-user-error.");

@@ -135,9 +135,9 @@ ul#Users {
 
     a {font-size: 1.4em;}
 
-    img {
-        //border: 2px solid #eee;
-    }
+    // img {
+    //     //border: 2px solid #eee;
+    // }
 
     img, svg {
         vertical-align: middle;
@@ -453,34 +453,40 @@ ul#Users {
     }
 }
 
-.container {
-    padding: 1em;
-    display: flex !important;
-    justify-content: center !important;
-
-    .card {
-        padding: 1em;
-        max-width: 600px;
-        width: 100% !important;
-        //text-align: left;
+.rjm-bootstrap {
+    .page {
+        .container {
+            height: 100vh !important;
+            padding: 1em;
+            // display: flex !important;
+            // justify-content: center !important;
+        
+            .card {
+                padding: 1em;
+                //max-width: 600px;
+                width: 100% !important;
+                //text-align: left;
+                border: 0;
+            }
+        }
     }
-}
 
-.loading-page {
-    display: grid;  
-    justify-content: center;
-    align-items: center;
-    text-align: center;
-    height: 100vh;
-
-    svg {
-        font-size: 3em;
-        animation: rotate 1.5s linear infinite;
-    }
+    .loading-page {
+        display: grid;  
+        justify-content: center;
+        align-items: center;
+        text-align: center;
+        height: 100vh;
     
-    @keyframes rotate {
-      to {
-        transform: rotate(360deg);
-      }
+        svg {
+            font-size: 3em;
+            animation: rotate 1.5s linear infinite;
+        }
+        
+        @keyframes rotate {
+          to {
+            transform: rotate(360deg);
+          }
+        }
     }
 }
