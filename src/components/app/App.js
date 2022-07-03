@@ -1,30 +1,45 @@
-import React from "react";
+// import { ErrorBoundary } from "react-error-boundary";
 import {
   BrowserRouter as Router,
-  Routes,
   Route,
-  //HashRouter,
+  Routes,
+  //useNavigate,
 } from "react-router-dom";
 
 import "../../styles/styles.css";
 
 import Dashboard from "../app/Dashboard";
 import PrivateRoute from "../app/PrivateRoute";
-import Conversation from "../messages/Conversation";
-import Contacts from "../contacts/Contacts";
 import AddContact from "../contacts/AddContact";
-import Notifications from "../messages/Notifications";
+import Contacts from "../contacts/Contacts";
 import { AuthProvider } from "../context/AuthContext";
+import Conversation from "../messages/Conversation";
+import Notifications from "../messages/Notifications";
 import ForgotPassword from "../user/ForgotPassword";
 import Login from "../user/Login";
+import Logout from "../user/Logout";
 import SignUp from "../user/SignUp";
 import UpdateProfile from "../user/UpdateProfile";
 import NotFound from "./NotFound";
-import Logout from "../user/Logout";
 
 function App() {
+  // const history = useNavigate();
+
+  // function ErrorFallBack(error, resetErrorBoundary) {
+  //   return (
+  //     <div role="alert">
+  //       <p>Something went wrong: </p>
+  //       <pre>{error.message}</pre>
+  //       <button onClick={resetErrorBoundary}>Try again</button>
+  //     </div>
+  //   );
+  // }
+
   return (
     <>
+      {/* <ErrorBoundary FallbackComponent={ErrorFallBack} onReset={history("/")}>
+      </ErrorBoundary> */}
+
       <Router>
         <AuthProvider>
           <Routes>

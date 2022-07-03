@@ -19,6 +19,7 @@ export default function AddContact() {
   const [user, setUser] = useState();
   const [data, setData] = useState(null);
   const [showScanner, setShowScanner] = useState(false);
+  //eslint-disable-next-line
   const [rotateCamera, setRotateCamera] = useState(false);
   const [hasCameraError, setHasCameraError] = useState(false);
 
@@ -161,8 +162,8 @@ export default function AddContact() {
                 <button
                   type="button"
                   onClick={() => {
-                    //console.log(!rotateCamera);
-                    setRotateCamera(!rotateCamera);
+                    console.log(!rotateCamera);
+                    //setRotateCamera(!rotateCamera);
                   }}
                   className="btn wide"
                 >
@@ -213,7 +214,7 @@ export default function AddContact() {
                             (contact && contact.providerData.photoURL) ||
                             defaultUserImage
                           }
-                          alt="photoURL"
+                          alt=""
                           style={{ width: "3em" }}
                         />
                         <h6>

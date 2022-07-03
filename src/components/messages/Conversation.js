@@ -1,20 +1,20 @@
 import { useEffect, useRef, useState } from "react";
-import { Alert, Button, Form, Image } from "react-bootstrap";
+import { Alert, Button, Form } from "react-bootstrap";
 import * as Icon from "react-bootstrap-icons";
 import { useCollectionData } from "react-firebase-hooks/firestore";
 import { Link, useParams } from "react-router-dom";
 
 import { auth, firestore } from "../../firebase";
 import defaultUserImage from "../../images/default_user.jpg";
+import AppBar from "../app/AppBar";
 import MessageBubble from "./MessageBubble";
+import Loading from "../app/Loading";
 
 export default function Conversation() {
   const [error, setError] = useState("");
   const [message, setMessage] = useState("");
-  // eslint-disable-next-line
   const [loading, setLoading] = useState(false);
   const [sending, setSending] = useState(false);
-  //const [messages, setMessages] = useState(null);
   let { uid: contactId } = useParams();
   const [contact, setContact] = useState();
   const [unseenMessage, setUnseenMessage] = useState("");
@@ -23,16 +23,18 @@ export default function Conversation() {
   const [hasUnseen, setHasUnseen] = useState(false);
   const [withScroll, setWithScroll] = useState(false);
   const [reachedTop, setReachedTop] = useState(false);
-  let from = auth.currentUser.uid + " - " + contactId;
-  let to = contactId + " - " + auth.currentUser.uid;
-  let senders = [from, to];
+
+  var fromIds = auth.currentUser.uid + " - " + contactId;
+  var toIds = contactId + " - " + auth.currentUser.uid;
+  var senderIds = [fromIds, toIds];
+
   const [showSendButton, setShowSendButton] = useState(false);
   const onKeyUp = () => setShowSendButton(messageRef.current.value.length > 0);
   //const onBlur = () => setShowSendButton(false);
 
   let messagesCollection = firestore
     .collection("messages")
-    .where("senders", "in", senders);
+    .where("senders", "in", senderIds);
 
   let unseenFilter = messagesCollection
     .where("status", "==", 0)
@@ -43,8 +45,6 @@ export default function Conversation() {
     // if (snapshots.exists) {
     unseenCount = snapshots.docs.length;
     if (unseenCount > 0) {
-      //console.log(snapshots.docs.sort((a, b) => b.data().createdDate.seconds - a.data().createdDate.seconds).map((e, i) => i === 0 ? e.data().message : null).filter((e) => e) ?? "")
-      //setConversationsHeight();
       setHasUnseen(true);
       let latestUnseenMessage =
         snapshots.docs
@@ -61,17 +61,29 @@ export default function Conversation() {
     setConversationsHeight();
   });
 
-  let conversationFilter = messagesCollection; //hasUnseen ? messagesCollection : messagesCollection.limit(10);
+  let conversationFilter = messagesCollection;
   let [conversations] = useCollectionData(conversationFilter);
-  //lastIndex = conversations.reverse().map((e) => e.uid);
-  //console.log(conversations.map((e) => {return e.uid}));
 
   let usersCollection = firestore.collection("users");
+  usersCollection
+    .doc(contactId)
+    //.where("uid", "==", contactId)
+    .get()
+    .then((snapshot) => {
+      //load();
+      if (snapshot.exists) {
+        setContact(snapshot.data());
+      }
+      //setLoading(false);
+    })
+    .finally(() => {})
+    .catch((e) => {
+      catchError(e, "get-contact-error.");
+    });
 
   useEffect(
     () => {
-      getContact();
-      //setConversationsHeight();
+      //getContact();
     },
     //eslint-disable-next-line
     []
@@ -106,22 +118,23 @@ export default function Conversation() {
     //console.log(withScroll, hasUnseen)
   }
 
-  async function getContact() {
-    load();
+  // async function getContact() {
+  //   load();
 
-    await usersCollection
-      .doc(contactId)
-      .get()
-      .then((snapshot) => {
-        if (snapshot.exists) {
-          setContact(snapshot.data());
-        }
-      })
-      .finally(() => {})
-      .catch((e) => {
-        catchError(e, "get-contact-error.");
-      });
-  }
+  //   await usersCollection
+  //     .doc(contactId)
+  //     .get()
+  //     .then((snapshot) => {
+  //       if (snapshot.exists) {
+  //         setContact(snapshot.data());
+  //       }
+  //       setLoading(false);
+  //     })
+  //     .finally(() => {})
+  //     .catch((e) => {
+  //       catchError(e, "get-contact-error.");
+  //     });
+  // }
 
   async function handleOnSend(e) {
     e.preventDefault();
@@ -138,7 +151,7 @@ export default function Conversation() {
           message: messageRef.current.value,
           to: contactId,
           from: auth.currentUser.uid,
-          senders: from,
+          senders: fromIds,
           status: 0,
         })
         .then(() => {
@@ -151,7 +164,7 @@ export default function Conversation() {
           return setError("Message not sent.");
         });
 
-      if (!withScroll) {
+      if (withScroll) {
         setConversationsHeight();
       }
       if (!withScroll) {
@@ -177,7 +190,6 @@ export default function Conversation() {
       const { scrollTop, scrollHeight, clientHeight } = listInnerRef.current;
       let currentScrollPosition = Math.floor(scrollTop + clientHeight + 1);
       let divScrollHeight = Math.floor(scrollHeight);
-      //console.log(currentScrollPosition === divScrollHeight);
       if (currentScrollPosition === divScrollHeight) {
         seenNewMessages();
       }
@@ -186,11 +198,7 @@ export default function Conversation() {
   };
 
   async function seenNewMessages() {
-    //if (unseenCount > 0) {
     await unseenFilter.get().then((snapshots) => {
-      //console.log(snapshots.docs.length);
-      //console.log("reached bottom");
-      //console.log("seen all new messages");
       const toBeSeen = [];
       snapshots.forEach((doc) =>
         toBeSeen.push(
@@ -206,9 +214,6 @@ export default function Conversation() {
       //console.log(unseenCount);
       setHasUnseen(unseenCount > 0);
     });
-    // } else {
-    //   //console.log("none to be seen");
-    // }
   }
 
   function load() {
@@ -225,46 +230,39 @@ export default function Conversation() {
 
   function handleOnError() {}
 
-  // let navbarHeight = document.getElementsByClassName("navbar").offsetHeight;
-  // let contactHeight = document.getElementsByClassName("contact").offsetHeight;
-  // let replyHeight = document.getElementById('#Reply').offsetHeight;
-  // let conversationsDiv = document.getElementById('#Conversations');
-  // console.log(navbarHeight + contactHeight + replyHeight);
-
-  return (
+  return !loading ? (
     <div className="page">
-      {/* <NavigationBar /> */}
-      <div className="contact contact_small">
-        <Link className="link" to="/">
-          <Icon.ArrowLeftShort style={{ color: "#198754" }} />
-        </Link>
-        <div className="user-icon">
-          <Image
-            roundedCircle
-            onError={() => handleOnError}
-            src={(contact && contact.providerData.photoURL) || defaultUserImage}
-            alt=""
-            style={{ width: "2em" }}
-          />
-          <span
+      <AppBar
+        component={
+          <div
             className={
-              contact && contact.isLoggedIn ? "logged-in" : "logged-out"
+              "contact contact_small logged-" +
+              (contact && contact.isLoggedIn ? "in" : "out")
             }
           >
-            ●
-          </span>
-        </div>
-        <div
-          style={{ display: "grid", height: "fit-content", fontSize: "0.8em" }}
-        >
-          {contact && (contact.displayName || contact.providerData.displayName)}
-          {contact && contact.isLoggedIn ? (
-            <strong style={{ color: "#198754" }}>Online</strong>
-          ) : (
-            <strong style={{ color: "#dc3545" }}>Offline</strong>
-          )}
-        </div>
-      </div>
+            <div className="user">
+              <img
+                className="rounded-circle"
+                onError={() => handleOnError}
+                src={
+                  contact && (contact.providerData.photoURL || defaultUserImage)
+                }
+                alt={contact && contact.displayName}
+              />
+              <span className="dot indicator">●</span>
+            </div>
+            <div className="content">
+              <strong className="title">
+                {contact &&
+                  (contact.displayName || contact.providerData.displayName)}
+              </strong>
+              <span className="tag indicator">
+                {contact && (contact.isLoggedIn ? "Online" : "Offline")}
+              </span>
+            </div>
+          </div>
+        }
+      />
       <div
         id="Conversations"
         className="w-100 text-center"
@@ -297,57 +295,27 @@ export default function Conversation() {
                       previousMessage={previousMessage}
                       nextMessage={nextMessage}
                       uid={auth.currentUser.uid}
-                      // ref={i === conversations.length - 1 ? scrollRef : null}
                     />
                   );
                 })}
           </tbody>
-          {/* <tfoot>
-          {newConversations &&
-            newConversations.map((message, i) => {
-              let previousMessage = i > 0 ? newConversations[i - 1] : null;
-              let nextMessage =
-                i < newConversations.length - 1
-                  ? newConversations[i + 1]
-                  : null;
-
-              return (
-                <MessageBubble
-                  key={message.id}
-                  index={i}
-                  len={newConversations.length}
-                  message={message}
-                  previousMessage={previousMessage}
-                  nextMessage={nextMessage}
-                  uid={auth.currentUser.uid}
-                />
-              );
-            })}
-        </tfoot> */}
         </table>
         <div ref={scrollRef}></div>
       </div>
-      <div
-        id="NewMessages"
-        // style={{ display: hasUnseen && withScroll ? "" : "none" }}
-        className={hasUnseen && withScroll ? "shown" : ""}
-      >
+      <div id="NewMessages" className={hasUnseen && withScroll ? "shown" : ""}>
         <button type="button" onClick={scrollToBottom}>
-          {/* <small>
-          New Message
-          {unseenCount > 1 ? "s " : " "}
-        </small> */}
           {hasUnseen && <small>{unseenMessage} </small>}
           <Icon.ArrowDown />
         </button>
       </div>
+
       <Form id="Reply" onSubmit={handleOnSend}>
         <Link className="link" to="">
           <Icon.PlusCircleFill style={{ color: "#198754" }} />
         </Link>
         <div className="subForm">
           <Form.Control
-            className="form"
+            className=""
             type="text"
             ref={messageRef}
             onKeyUp={onKeyUp}
@@ -368,11 +336,7 @@ export default function Conversation() {
         </div>
       </Form>
     </div>
+  ) : (
+    <Loading />
   );
 }
-
-<script type="text/javascript">
-  {/* let height = document.getElementsByClassName('contact')[0].offsetHeight +
-  document.getElementsByClassName('navbar')[0].offsetHeight;
-  document.getElementsByClassName('page')[0]. */}
-</script>;

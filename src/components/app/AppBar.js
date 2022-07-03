@@ -1,7 +1,7 @@
 import { Link } from "react-router-dom";
 import * as Icon from "react-bootstrap-icons";
 
-export default function AppBar({ title }) {
+export default function AppBar({ title, component }) {
   return (
     <nav className="appbar">
       <h1>
@@ -9,7 +9,8 @@ export default function AppBar({ title }) {
           <Icon.ArrowLeftShort />
         </Link>
       </h1>
-      <h5>{title}</h5>
+      {title && <h5>{title}</h5>}
+      {component && <>{component}</>}
     </nav>
   );
 }

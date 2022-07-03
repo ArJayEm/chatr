@@ -11,9 +11,9 @@ nav.appbar {
   column-gap: 0.5em;
   position: sticky;
   top: 0;
-  background-color: #198754;
-  padding-top: 0.5rem;
-  padding-bottom: 0.5rem;
+  background-color: #949a9f;
+  padding: 0.5em;
+  box-shadow: 0 0 20px #878787;
 }
 nav.appbar h1,
 nav.appbar h2,

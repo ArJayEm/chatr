@@ -88,7 +88,7 @@ export default function NavigationBar() {
                 roundedCircle
                 onError={() => handleOnError}
                 src={userImageSrc}
-                alt="photoURL"
+                alt=""
                 onClick={handleOnUserDropDownClick}
               />
             </button>

@@ -187,7 +187,7 @@ export default function Contacts() {
                           (contact && contact.providerData.photoURL) ||
                           defaultUserImage
                         }
-                        alt="photoURL"
+                        alt=""
                         style={{ width: "3em" }}
                       />
                       <span
