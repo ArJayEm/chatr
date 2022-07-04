@@ -11,7 +11,7 @@ import "../../styles/styles.css";
 import Dashboard from "../app/Dashboard";
 import PrivateRoute from "../app/PrivateRoute";
 import AddContact from "../contacts/AddContact";
-import Contacts from "../contacts/Contacts";
+import Messages from "../messages/Messages";
 import { AuthProvider } from "../context/AuthContext";
 import Conversation from "../messages/Conversation";
 import Notifications from "../messages/Notifications";
@@ -21,6 +21,7 @@ import Logout from "../user/Logout";
 import SignUp from "../user/SignUp";
 import UpdateProfile from "../user/UpdateProfile";
 import NotFound from "./NotFound";
+import Contacts from "../contacts/Contacts";
 
 function App() {
   // const history = useNavigate();
@@ -53,11 +54,12 @@ function App() {
             <Route exact path="/login" element={<Login />} />
             <Route exact path="/forgot-password" element={<ForgotPassword />} />
             <Route exact path="/notifications" element={<Notifications />} />
-            <Route exact path="/contacts" element={<Contacts />} />
+            <Route exact path="/messages" element={<Messages />} />
             <Route exact path="/addcontact" element={<AddContact />} />
             <Route path="/conversation/:uid" element={<Conversation />} />
             <Route component={NotFound} />
             <Route exact path="/logout" element={<Logout />} />
+            <Route exact path="/contacts" element={<Contacts />} />
           </Routes>
         </AuthProvider>
       </Router>

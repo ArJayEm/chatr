@@ -5,11 +5,37 @@ ul.contacts {
 }
 ul.contacts li {
   border: 1px solid #ddd;
+  border-top: 0;
   padding: 0.5em;
   cursor: pointer;
   line-height: 1;
   display: flex;
-  column-gap: 0.5em;
+  column-gap: 1em;
+  align-items: center;
+}
+ul.contacts li.contact.tiny img {
+  width: 1.5em !important;
+}
+ul.contacts li.contact.tiny .title {
+  font-size: 1rem !important;
+}
+ul.contacts li.contact.small img {
+  width: 2em !important;
+}
+ul.contacts li.contact.small .title {
+  font-size: 1.2rem !important;
+}
+ul.contacts li.contact.medium img {
+  width: 4em !important;
+}
+ul.contacts li.contact.medium .title {
+  font-size: 1.35rem !important;
+}
+ul.contacts li.contact.large img {
+  width: 6em !important;
+}
+ul.contacts li.contact.large .title {
+  font-size: 1.5rem !important;
 }
 ul.contacts li.loading-contact span {
   display: grid;
@@ -62,12 +88,15 @@ ul.contacts li a {
 }
 ul.contacts li button {
   right: 0;
+  height: fit-content;
+}
+ul.contacts li button.btn-light {
+  border: 1px solid #ddd;
 }
 ul.contacts li span {
   display: grid;
 }
 ul.contacts li h6 {
-  max-width: 10em;
   /* white-space: nowrap; */
   overflow: hidden;
   text-overflow: ellipsis;
@@ -76,4 +105,36 @@ ul.contacts li h6 {
   line-clamp: 2;
   -webkit-box-orient: vertical;
   line-height: 1.3;
+}
+ul.contacts li h6.title {
+  max-width: 12em;
+}
+ul.contacts li h6.flex {
+  display: flex !important;
+  max-width: unset !important;
+}
+ul.contacts li .content {
+  width: 100%;
+  row-gap: 0.5em;
+  display: grid;
+  font-size: 0.8em;
+  line-height: 1.2;
+}
+ul.contacts li .content .detail {
+  font-size: 0.7em;
+  color: #ddd;
+  margin-left: auto;
+}
+ul.contacts li .content .indicator {
+  color: #dc3545;
+}
+ul.contacts li .actions {
+  display: flex;
+  column-gap: 0.5em;
+  margin-left: auto;
+  width: 100%;
+}
+ul.contacts li .actions.deleted,
+ul.contacts li .actions.accepted {
+  display: none !important;
 }

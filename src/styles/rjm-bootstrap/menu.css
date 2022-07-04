@@ -79,3 +79,48 @@
 .rjm-bootstrap nav .user-dropdown .btn svg {
   color: #fff;
 }
+.rjm-bootstrap .tab-menu {
+  width: 100%;
+}
+.rjm-bootstrap .tab-menu li {
+  list-style: none;
+}
+.rjm-bootstrap .tab-menu li a {
+  width: 100%;
+  line-height: 3;
+}
+.rjm-bootstrap .tab-menu .tabs {
+  display: flex;
+  justify-items: center;
+  padding: 0;
+}
+.rjm-bootstrap .tab-menu .tabs li {
+  width: 50%;
+  text-align: center;
+  background-color: #eee;
+  border: 1px solid #ddd;
+  border-bottom: 0;
+}
+.rjm-bootstrap .tab-menu .tabs li.active {
+  background-color: #fff;
+}
+.rjm-bootstrap .tab-menu .tabs li.active a {
+  color: #000;
+}
+.rjm-bootstrap .tab-menu .tabs li a {
+  text-decoration: none;
+  color: #aeb6bc;
+}
+.rjm-bootstrap .tab-menu .tab-contents {
+  border: 1px solid #ddd;
+  border-bottom-right-radius: 0.5em;
+  border-bottom-left-radius: 0.5em;
+  border-top: 0;
+}
+.rjm-bootstrap .tab-menu .tab-contents .tab-content {
+  display: none;
+  padding: 0;
+}
+.rjm-bootstrap .tab-menu .tab-contents .tab-content.active {
+  display: block !important;
+}

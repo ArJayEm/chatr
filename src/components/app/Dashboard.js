@@ -3,12 +3,12 @@ import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 // import { useAuthState } from "react-firebase-hooks/auth";
 import axios from "axios";
-import { useGeolocated } from "react-geolocated";
 
-import { useAuth } from "../context/AuthContext";
 import { auth, firestore } from "../../firebase";
-import Contacts from "../contacts/Contacts";
+import { useAuth } from "../context/AuthContext";
+import Messages from "../messages/Messages";
 import NavigationBar from "./NavigationBar";
+import Loading from "./Loading";
 
 export default function Dashboard() {
   const { currentUser } = useAuth();
@@ -36,7 +36,7 @@ export default function Dashboard() {
       //if (auth.currentUser != null) {
       getGeoLocationData();
       saveUser();
-      setDashboardHeight();
+      //setDashboardHeight();
       // } else {
       //   history("/login");
       // }
@@ -98,20 +98,22 @@ export default function Dashboard() {
 
     var doc = usersCollection.doc(auth.currentUser.uid);
     //console.log(auth.currentUser);
-    const data = {
-      //editedDate: auth.currentUser.metadata.lastSignInTime,
-      displayName: auth.currentUser.displayName ?? auth.currentUser.email,
-      lastLogIn: auth.currentUser.metadata.lastSignInTime,
-      providerData: auth.currentUser.providerData.map((e) => e)[0],
-      isLoggedIn: true,
-      axiosGeoLocation: axiosGeoLocation,
-      navigatorGeoLocation: navigatorGeoLocation,
-    };
+    const data = {};
 
     if ((await doc.get()).exists) {
-      await doc.update(data).catch((e) => {
-        catchError(e, "update-user-error.");
-      });
+      await doc
+        .update({
+          //editedDate: auth.currentUser.metadata.lastSignInTime,
+          displayName: auth.currentUser.displayName ?? auth.currentUser.email,
+          lastLogIn: auth.currentUser.metadata.lastSignInTime,
+          providerData: auth.currentUser.providerData.map((e) => e)[0],
+          isLoggedIn: true,
+          axiosGeoLocation: axiosGeoLocation,
+          navigatorGeoLocation: navigatorGeoLocation,
+        })
+        .catch((e) => {
+          catchError(e, "update-user-error.");
+        });
     } else {
       await doc
         .set({
@@ -119,22 +121,39 @@ export default function Dashboard() {
           createdDate: auth.currentUser.metadata.createdDate ?? Date.now(),
           userCode: generateUserCode(),
           contacts: [],
-          data,
+          //editedDate: auth.currentUser.metadata.lastSignInTime,
+          displayName: auth.currentUser.displayName ?? auth.currentUser.email,
+          lastLogIn: auth.currentUser.metadata.lastSignInTime,
+          providerData: auth.currentUser.providerData.map((e) => e)[0],
+          isLoggedIn: true,
+          axiosGeoLocation: axiosGeoLocation,
+          navigatorGeoLocation: navigatorGeoLocation,
         })
         .catch((e) => {
           catchError(e, "set-user-error.");
         });
     }
+
+    await usersCollection
+      .doc(auth.currentUser.uid)
+      .get()
+      .then((snapshot) => {
+        if (snapshot.exists) {
+          setUser(snapshot.data());
+        }
+      });
     setLoading(false);
   }
 
   function setDashboardHeight() {
-    let navbarHeight =
-      document.getElementsByClassName("navbar")[0].offsetHeight;
-    const heightToDeduct = window.innerHeight - navbarHeight;
-    let rootDiv = document.getElementById("ContactsDiv");
-    //console.log(heightToDeduct);
-    //rootDiv.style.height = heightToDeduct + "px";
+    if (!loading) {
+      let navbarHeight =
+        document.getElementsByClassName("navbar")[0].offsetHeight;
+      const heightToDeduct = window.innerHeight - navbarHeight;
+      console.log(window.innerHeight, navbarHeight);
+      document.getElementById("ContactsDiv").style.height =
+        heightToDeduct + "px";
+    }
   }
 
   function load() {
@@ -151,9 +170,9 @@ export default function Dashboard() {
 
   return (
     <>
-      <NavigationBar />
-      {/* {loading ? <></> : <Contacts />} */}
-      <Contacts />
+      {loading && <Loading />}
+      {!loading && <NavigationBar user={user} />}
+      <Messages />
     </>
   );
   // retu

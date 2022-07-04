@@ -10,15 +10,13 @@ import defaultUserImage from "../../images/default_user.jpg";
 import { useAuth } from "../context/AuthContext";
 
 export default function NavigationBar() {
-  const { currentUser } = useAuth();
   const { logout } = useAuth();
   const history = useNavigate();
-  const displayName =
-    currentUser && (currentUser.displayName ?? currentUser.email);
+  const displayName = auth.currentUser.displayName ?? auth.currentUser.email;
   const [showMobileMenu, setShowMobileMenu] = useState("none");
   const menuClass = "user-dropdown" + (isMobile ? " mobile" : " desktop");
   const userImageSrc =
-    (currentUser && currentUser.photoURL) || defaultUserImage;
+    auth.currentUser.providerData[0].photoURL || defaultUserImage;
   const [showLogoutModal, setShowLogoutModal] = useState("none");
 
   useEffect(() => {
@@ -80,16 +78,21 @@ export default function NavigationBar() {
             {/* <Icon.ChatSquareFill /> */}
           </Link>
           <div className={menuClass}>
-            <button className="btn">
-              <Icon.BellFill />
-            </button>
-            <button className="btn" title={displayName}>
+            <a className="btn" href="/notifications">
+              <span>
+                <Icon.BellFill />
+              </span>
+            </a>
+            <button
+              className="btn"
+              title={displayName}
+              onClick={handleOnUserDropDownClick}
+            >
               <Image
                 roundedCircle
-                onError={() => handleOnError}
+                onError={handleOnError}
                 src={userImageSrc}
                 alt=""
-                onClick={handleOnUserDropDownClick}
               />
             </button>
             <div className="menu" style={{ display: showMobileMenu }}>
@@ -105,9 +108,9 @@ export default function NavigationBar() {
                 </a>
               </div>
               <div className="menu-links">
-                <a className="link" href="/notifications">
+                <a className="link" href="/contacts">
                   <span>
-                    <Icon.BellFill /> Notifications
+                    <Icon.PersonLinesFill /> Contacts
                   </span>
                 </a>
               </div>

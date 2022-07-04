@@ -13,9 +13,18 @@
   outline: 0;
   border: 0;
 }
-.rjm-bootstrap a.btn.wide,
-.rjm-bootstrap button.btn.wide {
+.rjm-bootstrap a.wide,
+.rjm-bootstrap button.wide {
   width: 100%;
+}
+.rjm-bootstrap a.btn-theme-success,
+.rjm-bootstrap button.btn-theme-success {
+  background-color: #949a9f !important;
+  color: #fff !important;
+}
+.rjm-bootstrap a.btn-defafult,
+.rjm-bootstrap button.btn-defafult {
+  border: 1px solid #ddd;
 }
 .rjm-bootstrap a.search,
 .rjm-bootstrap button.search {

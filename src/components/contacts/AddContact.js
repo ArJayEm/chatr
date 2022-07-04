@@ -32,7 +32,7 @@ export default function AddContact() {
 
   async function handleOnSearch(e) {
     e.preventDefault();
-    var code = userCodeRef.current.value ?? data;
+    var code = data ?? userCodeRef.current.value;
 
     if (code.length === 12) {
       load();
@@ -103,6 +103,8 @@ export default function AddContact() {
         createdDate: new Date(Date.now()),
         to: uid,
         from: auth.currentUser.uid,
+        deleted: 0,
+        accepted: 0
       });
 
       //setMessage("Request sent.");
@@ -204,7 +206,6 @@ export default function AddContact() {
             <Icon.QrCodeScan />
           </button>
         </form>
-
         <ul id="Users" className="contacts mt-2">
           {loading ? (
             <>
